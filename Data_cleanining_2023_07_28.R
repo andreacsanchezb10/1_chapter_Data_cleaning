@@ -1,8 +1,10 @@
 install.packages("funModeling")
+library(Rtools)
 library(readxl)
 library(dplyr)
 library(funModeling)
 
+### Country-Continent list -------------
 continent_list <- structure(list(country = c("Afghanistan", "Åland Islands", "Albania", 
                                              "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", 
                                              "Antarctica", "Antigua and Barbuda", "Argentina", "Armenia", 
@@ -99,132 +101,359 @@ continent_list <- structure(list(country = c("Afghanistan", "Åland Islands", "A
                                                                                   -249L), class = c("tbl_df", "tbl", "data.frame"))
 
 
-# Set the file path and name of the .xlsx file
+# Set the file path and name of the .xlsx file -------
 data_path <- "C:/Users/AndreaSanchez/OneDrive - CGIAR/1_chapter_PhD/data_extraction/Meta_data_2023.06.05.xlsx"
 
 # Use the read_excel() function to read the data into a data frame
-data <- read_excel(data_path, sheet = "meta_Data_2023.06.05")
+data <- read_excel(data_path, sheet = "meta_PCC_votecounting")
 data <- data[-1,]
 
-sort(unique(data$y_metric_recla))
-sort(unique(data$y_metric_recla_2))
+#### --- Filter rows for PCC meta-analysis ----
+sort(unique(data$effect_size_type))
 
-table(data$y_metric_recla)
-table(data$y_metric_recla_2)
+data_PCC<- data%>%
+  filter(effect_size_type=="partial correlation")
 
 #### ---- Filter Adoption papers ----
-adoption<- data%>%
-  filter(y_metric_recla_2=="adoption")%>%
+sort(unique(data_PCC$y_metric_recla))
+sort(unique(data_PCC$y_metric_recla_2))
+
+table(data_PCC$y_metric_recla)
+table(data_PCC$y_metric_recla_2)
+names(data_PCC)
+
+data_adoption<- data_PCC%>%
+  filter(y_metric_recla_2=="adoption")
+  
+length(sort(unique(data_adoption$id))) # Number of articles 85
+table(data_adoption$y_metric_recla)
+
+### Pre-processing ----
+data_adoption_clean<- data_adoption%>%
+  #Convert to numeric the necessary columns
   mutate(coefficient_num= as.numeric(coefficient),
          variance_value_num= as.numeric(variance_value),
-         standard_error= as.numeric(standard_error),
-         z_t_value= as.numeric(z_t_value),
-         n_predictors= as.numeric(n_predictors),
-         n_samples= as.numeric(n_samples),
-         country = as.character(country))
+         z_t_value_num= as.numeric(z_t_value),
+         p_value_num = as.numeric(p_value),
+         n_predictors_num= as.numeric(n_predictors),
+         n_samples_num= as.numeric(n_samples),
+         country = as.character(country))%>%
+  #Select only the columns that you are going to use
+  dplyr::select(id,model_id,main_crop, intervention_recla,intervention_recla_detail_1,
+                intervention_recla_detail_2,intervention_recla_detail_3,
+                y_metric_recla, effect_size_type,x_metric_recla, x_metric_unit,
+                model_analysis_raw,model_method,coefficient_type, 
+                coefficient, coefficient_num,
+                variance_metric,variance_value,variance_value_num,
+                z_t_value,z_t_value_num, p_value, p_value_num, df_original, n_predictors,n_predictors_num,
+                n_samples,n_samples_num, country)
 
-table(adoption$y_metric_recla)
 
-length(sort(unique(adoption$id))) # Number of articles 109
+table(data_adoption$coefficient_type)
 
-table(adoption$coefficient_type)
+### Factors cleaning ----
+sort(unique(data_adoption_clean$x_metric_recla))
 
-### Pre-processing
-adoption_clean<- adoption%>%
-  dplyr::select(id,model_id,intervention_recla,effect_size_type,x_metric_recla, x_metric_unit,
-                model_analysis_raw,model_method,coefficient_type, coefficient, 
-                coefficient_num,variance_metric,variance_value,variance_value_num,z_t_value,n_predictors,
-                n_samples)%>%
-  filter(x_metric_recla== "hh education")
-filter(x_metric_unit == "1= educated, 0= otherwise")
+factors_clean<- data_adoption_clean%>%
+  filter(x_metric_recla== "distance to market" | x_metric_recla=="distance to input market")
 
-filter(effect_size_type == "vote counting")
-
-filter(coefficient_type == "nd")
-
-sort(unique(adoption_clean$effect_size_type))
-length(sort(unique(adoption_clean$id))) # Number of articles 109
-sort(unique(adoption_clean$model_method))
-table(adoption_clean$model_analysis_raw, adoption_clean$model_method)
-
-####### Farmer characteristics -----
+####### FARMER CHARACTERISTICS -------
 ##### Socio-demographic ------
-## Household head Gender ----
-sort(unique(adoption_clean$x_metric_unit))
-sort(unique(adoption_clean$coefficient_type))
-sort(unique(adoption_clean$effect_size_type))
-
-# Multiply "1= female, 0= male" AND "1= male, 2= female" * -1 to convert to "1= male, 0= female"
-adoption_clean$coefficient_num[adoption_clean$x_metric_unit %in% c("1= female, 0= male", "1= male, 2= female")] <- 
-  adoption_clean$coefficient_num[adoption_clean$x_metric_unit %in% c("1= female, 0= male", "1= male, 2= female")] * -1
-
-# Convert "1= female, 0= male" and "1= male, 2= female" to "1= male, 0= female"
-adoption_clean$x_metric_unit_recla[adoption_clean$x_metric_recla %in% "hh gender"] <- adoption_clean$x_metric_unit
-adoption_clean$x_metric_unit_recla[adoption_clean$x_metric_unit %in% c("1= male, 0= female","1= female, 0= male", "1= male, 2= female")] <- "1= male, 0= female"
-
-# Change factor name
-adoption_clean$factor[adoption_clean$x_metric_recla %in% "hh gender"] <- "hh gender"
-
-# Factor_metric_unit
-adoption_clean$factor_metric_unit[adoption_clean$x_metric_recla %in% "hh gender"] <- 
-  paste(adoption_clean$factor, " (", adoption_clean$x_metric_unit_recla, ")", sep="")
-
-sort(unique(adoption_clean$factor_metric_unit))
+#"hh age"
+#"hh gender"
+#"hh education"
+#"h size"
 
 ## Household head Age ----
-sort(unique(adoption_clean$x_metric_unit))
-sort(unique(adoption_clean$coefficient_type))
-sort(unique(adoption_clean$effect_size_type))
-
-# "years * (10^-2)" * 10^-2 to convert to "years"
-adoption_clean$coefficient_num[adoption_clean$x_metric_recla %in% "hh age" &
-                                 adoption_clean$x_metric_unit %in% "years * (10^-2)"] <- 
-  adoption_clean$coefficient_num[adoption_clean$x_metric_recla %in% "hh age" &
-                                   adoption_clean$x_metric_unit %in% "years * (10^-2)"] * 10^-2
-
-adoption_clean$variance_value_num[adoption_clean$x_metric_recla %in% "hh age" &
-                                    adoption_clean$x_metric_unit %in% "years * (10^-2)"&
-                                    adoption_clean$variance_metric %in% "standard error"] <- 
-  adoption_clean$variance_value_num[adoption_clean$x_metric_recla %in% "hh age" &
-                                      adoption_clean$x_metric_unit %in% "years * (10^-2)"&
-                                      adoption_clean$variance_metric %in% "standard error"] * 10^-2
+length(sort(unique(factors_clean$id))) # Number of articles 56
+sort(unique(factors_clean$x_metric_unit))
+#[1] "(years)^2"                                                 "1= 20–30 yrs, 2= 30–40 yrs, 3= 40–50 yrs, 4= above 50 yrs"
+#[3] "sqrt(years)"                                               "years"                                                    
+#[5] "years * (10^-2)" 
+table(factors_clean$x_metric_unit)
 
 # Change the  x_metric_unit_recla
-adoption_clean$x_metric_unit_recla[adoption_clean$x_metric_recla %in% "hh age"] <- adoption_clean$x_metric_unit
-
-adoption_clean$x_metric_unit_recla[adoption_clean$x_metric_recla %in% "hh age" & 
-                                     adoption_clean$x_metric_unit %in% c("years","years * (10^-2)")] <- "years"
+factors_clean$x_metric_unit_recla[factors_clean$x_metric_recla %in% "hh age"] <- factors_clean$x_metric_unit
 
 # Change factor name
-adoption_clean$factor[adoption_clean$x_metric_recla %in% "hh age"] <- "hh age"
+factors_clean$factor[factors_clean$x_metric_recla %in% "hh age"] <- "hh age"
 
 # Factor_metric_unit
-adoption_clean$factor_metric_unit[adoption_clean$x_metric_recla %in% "hh age"] <- 
-  paste(adoption_clean$factor, " (", adoption_clean$x_metric_unit_recla, ")", sep="")
+factors_clean$factor_metric_unit[factors_clean$x_metric_recla %in% "hh age"] <- 
+  paste(factors_clean$factor, " (", factors_clean$x_metric_unit_recla, ")", sep="")
 
-sort(unique(adoption_clean$factor_metric_unit))
+sort(unique(factors_clean$factor_metric_unit))
+
+write.csv(factors_clean, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC_hh_age.csv", row.names=FALSE)
+
+## Household head Gender ----
+length(sort(unique(factors_clean$id))) # Number of articles 49
+sort(unique(factors_clean$x_metric_unit))
+#[1] "1= female, 0= male" "1= male, 0= female" "1= male, 2= female" "nd" 
+table(factors_clean$x_metric_unit)
+
+# Multiply "1= female, 0= male" AND "1= male, 2= female" * -1 to convert to "1= male, 0= female"
+factors_clean$coefficient_num[factors_clean$x_metric_unit %in% c("1= female, 0= male", "1= male, 2= female")] <- 
+  factors_clean$coefficient_num[factors_clean$x_metric_unit %in% c("1= female, 0= male", "1= male, 2= female")] * -1
+
+# Convert "1= female, 0= male" and "1= male, 2= female" to "1= male, 0= female"
+factors_clean$x_metric_unit_recla[factors_clean$x_metric_recla %in% "hh gender"] <- factors_clean$x_metric_unit
+factors_clean$x_metric_unit_recla[factors_clean$x_metric_unit %in% c("1= male, 0= female","1= female, 0= male", "1= male, 2= female")] <- "1= male, 0= female"
+
+# Change factor name
+factors_clean$factor[factors_clean$x_metric_recla %in% "hh gender"] <- "hh gender"
+
+# Factor_metric_unit
+factors_clean$factor_metric_unit[factors_clean$x_metric_recla %in% "hh gender"] <- 
+  paste(factors_clean$factor, " (", factors_clean$x_metric_unit_recla, ")", sep="")
+
+sort(unique(factors_clean$factor_metric_unit))
+
+write.csv(factors_clean, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC_hh_gender.csv", row.names=FALSE)
 
 ## Household head Education ----
-sort(unique(adoption_clean$x_metric_unit))
-sort(unique(adoption_clean$coefficient_type))
-sort(unique(adoption_clean$effect_size_type))
+length(sort(unique(factors_clean$id))) # Number of articles 69
+sort(unique(factors_clean$x_metric_unit))
+#[1] "0= no formal education, 1= non-formal vocational training, 2= primary school,  3= secondary school, 4= post-secondary."                                                                     
+#[2] "0= no, 1= minimal, 2= moderate and 3= high"                                                                                                                                                 
+#[3] "0= none, 1= primary, 2= secondary, 3= tertiary"                                                                                                                                             
+#[4] "1= at least primary education, 0= no formal education"                                                                                                                                      
+#[5] "1= Basic education, 0= no education"                                                                                                                                                        
+#[6] "1= Basic, 2= High School, 3= Graduate, 4= Post-graduate"                                                                                                                                    
+#[7] "1= college education, 0= no"                                                                                                                                                                
+#[8] "1= college education, 0= otherwise"                                                                                                                                                         
+#[9] "1= educated, 0= otherwise"                                                                                                                                                                  
+#[10] "1= formal schooling, 0= no formal schooling"                                                                                                                                                
+#[11] "1= high school level education, 0=otherwise"                                                                                                                                                
+#[12] "1= household head had at least but no more than primary level of education, 0= no formal schooling"                                                                                         
+#[13] "1= household head had secondary level (or higher) of formal education, 0= otherwise"                                                                                                        
+#[14] "1= if farmer completed secondary education or more; 0= otherwise"                                                                                                                           
+#[15] "1= illiterate, 2= primary, 3= secondary, 4= tertiary"                                                                                                                                       
+#[16] "1= illiterate; 2= can read and write; 3= primary school (primary 1–5); 4= primary school (primary 6–7); 5= junior high school; 6= high school; 7= vocational education; 8= higher education"
+#[17] "1= Less than high school; 2= High school; 3= Some college, 4= College degree; 5= Post-graduate degree"                                                                                      
+#[18] "1= literacy campaing, 0= 1-2 years"                                                                                                                                                         
+#[19] "1= literate, 0= illiterate"                                                                                                                                                                 
+#[20] "1= literate, 0= otherwise"                                                                                                                                                                  
+#[21] "1= Lower primary (grades 1-4), 0= otherwise"                                                                                                                                                
+#[22] "1= Never attended school; 2= Elementary school; 3= Junior high-school; 4= Senior high-school;  5= Bachelor degree;  6= Other higher education"                                              
+#[23] "1= No formal education; 2= Adult education; 3= Primary school; 4= Secondary school; 5= Post secondary"                                                                                      
+#[24] "1= none, 2= primary, 3= ordinary level, 4= advanced level, 5= tertiary"                                                                                                                     
+#[25] "1= none, 2= primary, 3= secondary, and 4= above"                                                                                                                                            
+#[26] "1= post-secondary education, 0= no formal education"                                                                                                                                        
+#[27] "1= Post-secondary, 0= otherwise"                                                                                                                                                            
+#[28] "1= primary education, 0= no formal education"                                                                                                                                               
+#[29] "1= primary education, 0= otherwise"                                                                                                                                                         
+#[30] "1= primary education, 2= secondary education, 3= tertiary education"                                                                                                                        
+#[31] "1= Secondary (grades 8-12), 0= otherwise"                                                                                                                                                   
+#[32] "1= secondary education, 0= no formal education"                                                                                                                                             
+#[33] "1= secondary, 0=otherwise"                                                                                                                                                                  
+#[34] "1= Secondary/Tertiary education, 0= no education"                                                                                                                                           
+#[35] "1= the respondent obtained an education level equivalent to a two-year degree or higher;  0= otherwise"                                                                                     
+#[36] "1= three plus years, 0= 1-2 years"                                                                                                                                                          
+#[37] "1= Upper primary (grades 5-7), 0= otherwise"                                                                                                                                                
+#[38] "1=Farmers’ level of education above the secondary school; 0=otherwise"                                                                                                                      
+#[39] "level"                                                                                                                                                                                      
+#[40] "level (0-4)"                                                                                                                                                                                
+#[41] "level (1-6)"                                                                                                                                                                                
+#[42] "nd"                                                                                                                                                                                         
+#[43] "Ordinal Scale (1 = Less than high-school, 6 = Graduate degree)"                                                                                                                             
+#[44] "scale (1-5) 1= Some high school, no diploma to 5= graduate or professional degree"                                                                                                          
+#[45] "years"  
+##[1] "1= female, 0= male" "1= male, 0= female" "1= male, 2= female" "nd" 
+table(factors_clean$x_metric_unit)
 
 # Change the  x_metric_unit_recla
-adoption_clean$x_metric_unit_recla[adoption_clean$x_metric_recla %in% "hh education"] <- adoption_clean$x_metric_unit
+factors_clean$x_metric_unit_recla[factors_clean$x_metric_recla %in% "hh education"] <- factors_clean$x_metric_unit
 
 # Change factor name
-adoption_clean$factor[adoption_clean$x_metric_recla %in% "hh education"] <- "hh education"
+factors_clean$factor[factors_clean$x_metric_recla %in% "hh education"] <- "hh education"
 
 # Factor_metric_unit
-adoption_clean$factor_metric_unit[adoption_clean$x_metric_recla %in% "hh education"] <- 
-  paste(adoption_clean$factor, " (", adoption_clean$x_metric_unit_recla, ")", sep="")
+factors_clean$factor_metric_unit[factors_clean$x_metric_recla %in% "hh education"] <- 
+  paste(factors_clean$factor, " (", factors_clean$x_metric_unit_recla, ")", sep="")
 
-sort(unique(adoption_clean$factor_metric_unit))
+sort(unique(factors_clean$factor_metric_unit))
+
+write.csv(factors_clean, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC_hh_education.csv", row.names=FALSE)
 
 
+## Household size ----
+length(sort(unique(factors_clean$id))) # Number of articles 39
+sort(unique(factors_clean$x_metric_unit))
+#[1] "1= <4 members, 2= 5–8 member, 3= 9–12 member, 4= above 12 member" "1= 8-15 members, 0= <8 members"                                  
+#[3] "1= more than 15 members, 0= <8 members"                           "number of people" 
+table(factors_clean$x_metric_unit)
+
+# Change the  x_metric_unit_recla
+factors_clean$x_metric_unit_recla[factors_clean$x_metric_recla %in% "h size"] <- factors_clean$x_metric_unit
+
+# Change factor name
+factors_clean$factor[factors_clean$x_metric_recla %in% "h size"] <- "h size"
+
+# Factor_metric_unit
+factors_clean$factor_metric_unit[factors_clean$x_metric_recla %in% "h size"] <- 
+  paste(factors_clean$factor, " (", factors_clean$x_metric_unit_recla, ")", sep="")
+
+sort(unique(factors_clean$factor_metric_unit))
+
+write.csv(factors_clean, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC_h_size.csv", row.names=FALSE)
+
+##### Information ------
+#"hh farming experience"
+
+## Household farming experience ----
+length(sort(unique(factors_clean$id))) # Number of articles 18
+sort(unique(factors_clean$x_metric_unit))
+#[1] "(years)^2"                                        "1= <15 years of farming experience, 0= otherwise" "years"  
+table(factors_clean$x_metric_unit)
+
+# Change the  x_metric_unit_recla
+factors_clean$x_metric_unit_recla[factors_clean$x_metric_recla %in% "hh farming experience"] <- factors_clean$x_metric_unit
+
+# Change factor name
+factors_clean$factor[factors_clean$x_metric_recla %in% "hh farming experience"] <- "hh farming experience"
+
+# Factor_metric_unit
+factors_clean$factor_metric_unit[factors_clean$x_metric_recla %in% "hh farming experience"] <- 
+  paste(factors_clean$factor, " (", factors_clean$x_metric_unit_recla, ")", sep="")
+
+sort(unique(factors_clean$factor_metric_unit))
+
+write.csv(factors_clean, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC_hh_farming_experience.csv", row.names=FALSE)
+
+####### FARM CHARACTERISTICS -----
+##### Biophysical ------
+#"farm size"
+## Farm size ----
+length(sort(unique(factors_clean$id))) # Number of articles 53
+sort(unique(factors_clean$x_metric_unit))
+#[1] "(ha)^2"                                                             "1= <2 ha; 2= 2–3.5 ha; 3= 3.5–5 ha; 4= more than 5 ha"             
+#[3] "1= <250” acres, 2= 250–749 acres, 3= 750–1449 acres, 4: 1500 acres" "1= >0.50 ha; 0= < 0.50 ha"                                         
+#[5] "1= 100-399 fa, 0= <100 fa (1fa=0.42 ha)"                            "1= 1000 acres, 0=otherwise"                                        
+#[7] "1= 400-1000 fa; 0= <100 fa (1fa=0.42 ha)"                           "1= Farmers who owned land below 10 ac (4.05 ha); 0=otherwise"      
+#[9] "1= more than 1000 fa; 0= <100 fa (1fa=0.42 ha), 0= otherwise"       "1= squared(1000 acres), 0=otherwise"                               
+#[11] "acres"                                                              "ha"                                                                
+#[13] "ktha (30 ktha=1ha)"                                                 "Mukhamas (1Mukhamas= 0.73 ha)"                                     
+#[15] "rai (1 rai = 0.16 ha)" 
+table(factors_clean$x_metric_unit)
+
+# Convert "acres" to "ha"
+factors_clean$coefficient_num[factors_clean$x_metric_recla %in% "farm size" &
+                                 factors_clean$x_metric_unit %in% "acres"] <- 
+  factors_clean$coefficient_num[factors_clean$x_metric_recla %in% "farm size" &
+                                   factors_clean$x_metric_unit %in% "acres"] * 0.404686
+
+factors_clean$variance_value_num[factors_clean$x_metric_recla %in% "farm size" &
+                                    factors_clean$x_metric_unit %in% "acres"&
+                                    factors_clean$variance_metric %in% c("standard error", "robust standard error")] <- 
+  factors_clean$variance_value_num[factors_clean$x_metric_recla %in% "farm size" &
+                                      factors_clean$x_metric_unit %in% "acres"&
+                                      factors_clean$variance_metric %in% c("standard error", "robust standard error")] * 0.404686
+
+# Convert "ktha (30 ktha=1ha)" to "ha"
+factors_clean$coefficient_num[factors_clean$x_metric_recla %in% "farm size" &
+                                 factors_clean$x_metric_unit %in% "ktha (30 ktha=1ha)"] <- 
+  factors_clean$coefficient_num[factors_clean$x_metric_recla %in% "farm size" &
+                                   factors_clean$x_metric_unit %in% "ktha (30 ktha=1ha)"] /30
+
+factors_clean$variance_value_num[factors_clean$x_metric_recla %in% "farm size" &
+                                    factors_clean$x_metric_unit %in% "ktha (30 ktha=1ha)"&
+                                    factors_clean$variance_metric %in% c("standard error", "robust standard error")] <- 
+  factors_clean$variance_value_num[factors_clean$x_metric_recla %in% "farm size" &
+                                      factors_clean$x_metric_unit %in% "ktha (30 ktha=1ha)"&
+                                      factors_clean$variance_metric %in% c("standard error", "robust standard error")] /30
+
+# Convert "rai (1 rai = 0.16 ha)" to "ha"
+factors_clean$coefficient_num[factors_clean$x_metric_recla %in% "farm size" &
+                                 factors_clean$x_metric_unit %in% "rai (1 rai = 0.16 ha)"] <- 
+  factors_clean$coefficient_num[factors_clean$x_metric_recla %in% "farm size" &
+                                   factors_clean$x_metric_unit %in% "rai (1 rai = 0.16 ha)"] *0.16
+
+factors_clean$variance_value_num[factors_clean$x_metric_recla %in% "farm size" &
+                                    factors_clean$x_metric_unit %in% "rai (1 rai = 0.16 ha)"&
+                                    factors_clean$variance_metric %in% c("standard error", "robust standard error")] <- 
+  factors_clean$variance_value_num[factors_clean$x_metric_recla %in% "hh age" &
+                                      factors_clean$x_metric_unit %in% "rai (1 rai = 0.16 ha)"&
+                                      factors_clean$variance_metric %in% c("standard error", "robust standard error")] *0.16
+
+# Convert "Mukhamas (1Mukhamas= 0.73 ha)" to "ha"
+factors_clean$coefficient_num[factors_clean$x_metric_recla %in% "farm size" &
+                                 factors_clean$x_metric_unit %in% "Mukhamas (1Mukhamas= 0.73 ha)"] <- 
+  factors_clean$coefficient_num[factors_clean$x_metric_recla %in% "farm size" &
+                                   factors_clean$x_metric_unit %in% "Mukhamas (1Mukhamas= 0.73 ha)"] *0.73
+
+factors_clean$variance_value_num[factors_clean$x_metric_recla %in% "farm size" &
+                                    factors_clean$x_metric_unit %in% "Mukhamas (1Mukhamas= 0.73 ha)"&
+                                    factors_clean$variance_metric %in% c("standard error", "robust standard error")] <- 
+  factors_clean$variance_value_num[factors_clean$x_metric_recla %in% "hh age" &
+                                      factors_clean$x_metric_unit %in% "Mukhamas (1Mukhamas= 0.73 ha)"&
+                                      factors_clean$variance_metric %in% c("standard error", "robust standard error")] *0.73
+
+# Change the  x_metric_unit_recla
+factors_clean$x_metric_unit_recla[factors_clean$x_metric_recla %in% "farm size"] <- factors_clean$x_metric_unit
+
+factors_clean$x_metric_unit_recla[factors_clean$x_metric_recla %in% "farm size" & 
+                                     factors_clean$x_metric_unit %in% c("acres", "ktha (30 ktha=1ha)",
+                                                                         "rai (1 rai = 0.16 ha)","Mukhamas (1Mukhamas= 0.73 ha)")] <- "ha"
+
+# Change factor name
+factors_clean$factor[factors_clean$x_metric_recla %in% "farm size"] <- "farm size"
+
+# Factor_metric_unit
+factors_clean$factor_metric_unit[factors_clean$x_metric_recla %in% "farm size"] <- 
+  paste(factors_clean$factor, " (", factors_clean$x_metric_unit_recla, ")", sep="")
+
+sort(unique(factors_clean$factor_metric_unit))
+
+write.csv(factors_clean, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC_farm_size.csv", row.names=FALSE)
 
 
+####### CONTEXT CHARACTERISTICS -----
+##### Physical capital ------
+#"distance to market" AND "distance to input market"
+#"distance to road"
 
+## Distance to market AND Distance to input market ----
+length(sort(unique(factors_clean$id))) # Number of articles 20
+sort(unique(factors_clean$x_metric_unit))
+#[1] "1= 1 to 3 km, 0= less than 1 km"                                                                 
+#[2] "1= Farmers’ house holds that could reach market center within 13 km (about 8 miles), 0=otherwise"
+#[3] "km"                                                                                              
+#[4] "miles"                                                                                           
+#[5] "minutes"                                                                                         
+#[6] "minutes (10^-2)"                                                                                 
+#[7] "number of city visits during the last year"
+table(factors_clean$x_metric_unit)
+
+# Convert "miles" to "km"
+factors_clean$coefficient_num[factors_clean$x_metric_recla %in% c("distance to market", "distance to input market") &
+                                factors_clean$x_metric_unit %in% "miles"] <- 
+  factors_clean$coefficient_num[factors_clean$x_metric_recla %in% c("distance to market", "distance to input market") &
+                                  factors_clean$x_metric_unit %in% "miles"] * 1.60934
+
+factors_clean$variance_value_num[factors_clean$x_metric_recla %in% c("distance to market", "distance to input market") &
+                                   factors_clean$x_metric_unit %in% "miles"&
+                                   factors_clean$variance_metric %in% c("standard error", "robust standard error")] <- 
+  factors_clean$variance_value_num[factors_clean$x_metric_recla %in% c("distance to market", "distance to input market") &
+                                     factors_clean$x_metric_unit %in% "miles"&
+                                     factors_clean$variance_metric %in% c("standard error", "robust standard error")] * 1.60934
+
+# Change the  x_metric_unit_recla
+factors_clean$x_metric_unit_recla[factors_clean$x_metric_recla %in% c("distance to market", "distance to input market")] <- factors_clean$x_metric_unit
+
+factors_clean$x_metric_unit_recla[factors_clean$x_metric_recla %in% c("distance to market", "distance to input market") & 
+                                    factors_clean$x_metric_unit %in% c("miles")] <- "km"
+
+# Change factor name
+factors_clean$factor[factors_clean$x_metric_recla %in% c("distance to market", "distance to input market")] <- "distance to market"
+
+# Factor_metric_unit
+factors_clean$factor_metric_unit[factors_clean$x_metric_recla %in% c("distance to market", "distance to input market")] <- 
+  paste(factors_clean$factor, " (", factors_clean$x_metric_unit_recla, ")", sep="")
+
+sort(unique(factors_clean$factor_metric_unit))
+
+write.csv(factors_clean, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC_distance_market.csv", row.names=FALSE)
 
 
 
