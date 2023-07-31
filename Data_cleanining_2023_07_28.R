@@ -184,7 +184,7 @@ factors_clean$factor_metric_unit[factors_clean$x_metric_recla %in% "hh age"] <-
 
 sort(unique(factors_clean$factor_metric_unit))
 
-write.csv(factors_clean, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC_hh_age.csv", row.names=FALSE)
+write.csv(factors_clean, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC/PCC_hh_age.csv", row.names=FALSE)
 
 ## Household head Gender ----
 length(sort(unique(factors_clean$id))) # Number of articles 49
@@ -209,7 +209,7 @@ factors_clean$factor_metric_unit[factors_clean$x_metric_recla %in% "hh gender"] 
 
 sort(unique(factors_clean$factor_metric_unit))
 
-write.csv(factors_clean, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC_hh_gender.csv", row.names=FALSE)
+write.csv(factors_clean, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC/PCC_hh_gender.csv", row.names=FALSE)
 
 ## Household head Education ----
 length(sort(unique(factors_clean$id))) # Number of articles 69
@@ -296,7 +296,7 @@ factors_clean$factor_metric_unit[factors_clean$x_metric_recla %in% "h size"] <-
 
 sort(unique(factors_clean$factor_metric_unit))
 
-write.csv(factors_clean, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC_h_size.csv", row.names=FALSE)
+write.csv(factors_clean, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC/PCC_h_size.csv", row.names=FALSE)
 
 ##### Information ------
 #"hh farming experience"
@@ -319,7 +319,7 @@ factors_clean$factor_metric_unit[factors_clean$x_metric_recla %in% "hh farming e
 
 sort(unique(factors_clean$factor_metric_unit))
 
-write.csv(factors_clean, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC_hh_farming_experience.csv", row.names=FALSE)
+write.csv(factors_clean, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC/PCC_hh_farming_experience.csv", row.names=FALSE)
 
 ####### FARM CHARACTERISTICS -----
 ##### Biophysical ------
@@ -405,7 +405,7 @@ factors_clean$factor_metric_unit[factors_clean$x_metric_recla %in% "farm size"] 
 
 sort(unique(factors_clean$factor_metric_unit))
 
-write.csv(factors_clean, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC_farm_size.csv", row.names=FALSE)
+write.csv(factors_clean, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC/PCC_farm_size.csv", row.names=FALSE)
 
 
 ####### CONTEXT CHARACTERISTICS -----
@@ -453,7 +453,7 @@ factors_clean$factor_metric_unit[factors_clean$x_metric_recla %in% c("distance t
 
 sort(unique(factors_clean$factor_metric_unit))
 
-write.csv(factors_clean, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC_distance_market.csv", row.names=FALSE)
+write.csv(factors_clean, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC/PCC_distance_market.csv", row.names=FALSE)
 
 
 
