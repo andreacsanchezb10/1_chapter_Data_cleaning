@@ -184,7 +184,7 @@ hh_age$factor_metric_unit[hh_age$x_metric_recla %in% "hh age"] <-
 sort(unique(hh_age$factor_metric_unit))
 str(hh_age)
 
-write.csv(hh_age, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC/PCC_hh_age.csv", row.names=FALSE)
+write.csv(hh_age, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_hh_age.csv", row.names=FALSE)
 
 ## Household head Gender ----
 hh_gender<- data_adoption_clean%>%
@@ -213,7 +213,7 @@ hh_gender$factor_metric_unit[hh_gender$x_metric_recla %in% "hh gender"] <-
 sort(unique(hh_gender$factor_metric_unit))
 str(hh_gender)
 
-write.csv(hh_gender, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC/PCC_hh_gender.csv", row.names=FALSE)
+write.csv(hh_gender, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_hh_gender.csv", row.names=FALSE)
 
 ## Household head Education ----
 hh_education<- data_adoption_clean%>%
@@ -282,7 +282,7 @@ hh_education$factor_metric_unit[hh_education$x_metric_recla %in% "hh education"]
 sort(unique(hh_education$factor_metric_unit))
 str(hh_education)
 
-write.csv(hh_education, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC/PCC_hh_education.csv", row.names=FALSE)
+write.csv(hh_education, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_hh_education.csv", row.names=FALSE)
 
 ## Household size ----
 h_size<- data_adoption_clean%>%
@@ -307,7 +307,7 @@ h_size$factor_metric_unit[h_size$x_metric_recla %in% "h size"] <-
 sort(unique(h_size$factor_metric_unit))
 str(h_size)
 
-write.csv(h_size, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC/PCC_h_size.csv", row.names=FALSE)
+write.csv(h_size, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_h_size.csv", row.names=FALSE)
 
 ##### Information ------
 #"hh farming experience"
@@ -322,7 +322,7 @@ sort(unique(hh_farming_experience$x_metric_unit))
 table(hh_farming_experience$x_metric_unit)
 
 # Change the  x_metric_unit_recla
-hh_farming_experience$x_metric_unit_recla[hh_farming_experience$x_metric_recla %in% "hh farming experience"] <- factors_clean$x_metric_unit
+hh_farming_experience$x_metric_unit_recla[hh_farming_experience$x_metric_recla %in% "hh farming experience"] <- hh_farming_experience$x_metric_unit
 
 # Change factor name
 hh_farming_experience$factor[hh_farming_experience$x_metric_recla %in% "hh farming experience"] <- "hh farming experience"
@@ -334,7 +334,7 @@ hh_farming_experience$factor_metric_unit[hh_farming_experience$x_metric_recla %i
 sort(unique(hh_farming_experience$factor_metric_unit))
 str(hh_farming_experience)
 
-write.csv(hh_farming_experience, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC/PCC_hh_farming_experience.csv", row.names=FALSE)
+write.csv(hh_farming_experience, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_hh_farming_experience.csv", row.names=FALSE)
 
 ####### FARM CHARACTERISTICS -----
 ##### Biophysical ------
@@ -424,7 +424,7 @@ farm_size$factor_metric_unit[farm_size$x_metric_recla %in% "farm size"] <-
 sort(unique(farm_size$factor_metric_unit))
 str(farm_size)
 
-write.csv(farm_size, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC/PCC_farm_size.csv", row.names=FALSE)
+write.csv(farm_size, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_farm_size.csv", row.names=FALSE)
 
 ####### CONTEXT CHARACTERISTICS -----
 ##### Physical capital ------
@@ -475,5 +475,5 @@ distance_market$factor_metric_unit[distance_market$x_metric_recla %in% c("distan
 sort(unique(distance_market$factor_metric_unit))
 str(distance_market)
 
-write.csv(distance_market, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_PhD/PCC/PCC_distance_market.csv", row.names=FALSE)
+write.csv(distance_market, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_distance_market.csv", row.names=FALSE)
 
