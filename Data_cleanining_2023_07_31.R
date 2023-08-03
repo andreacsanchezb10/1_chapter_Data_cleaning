@@ -125,7 +125,7 @@ names(data_PCC)
 data_adoption<- data_PCC%>%
   filter(y_metric_recla_2=="adoption")
 
-length(sort(unique(data_adoption$id))) # Number of articles 85
+length(sort(unique(data_adoption$id))) # Number of articles 84
 table(data_adoption$y_metric_recla)
 
 ### Pre-processing ----
@@ -221,7 +221,7 @@ write.csv(hh_gender, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapte
 hh_education<- data_adoption_clean%>%
   filter(x_metric_recla== "hh education")
 
-length(sort(unique(hh_education$id))) # Number of articles 69
+length(sort(unique(hh_education$id))) # Number of articles 68
 sort(unique(hh_education$x_metric_unit))
 #[1] "0= no formal education, 1= non-formal vocational training, 2= primary school,  3= secondary school, 4= post-secondary."                                                                     
 #[2] "0= no, 1= minimal, 2= moderate and 3= high"                                                                                                                                                 
@@ -313,6 +313,34 @@ str(h_size)
 
 write.csv(h_size, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_h_size.csv", row.names=FALSE)
 
+
+##### Economic and financial capital ------
+#"access to credit"
+
+## Access to credit ----
+access_credit<- data_adoption_clean%>%
+  filter(x_metric_recla== "access to credit")
+
+length(sort(unique(access_credit$id))) # Number of articles 25
+sort(unique(access_credit$x_metric_unit))
+
+# Change the  x_metric_unit_recla
+access_credit$x_metric_unit_recla[access_credit$x_metric_recla %in% "access to credit"] <- access_credit$x_metric_unit
+
+# Change factor name
+access_credit$factor[access_credit$x_metric_recla %in% "access to credit"] <- "access to credit"
+
+# Factor_metric_unit
+access_credit$factor_metric_unit[access_credit$x_metric_recla %in% "access to credit"] <- 
+  paste(access_credit$factor, " (", access_credit$x_metric_unit_recla, ")", sep="")
+
+sort(unique(access_credit$factor_metric_unit))
+str(access_credit)
+(unique(access_credit$x_metric_raw))
+
+write.csv(access_credit, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_access_credit.csv", row.names=FALSE)
+
+
 ##### Information/Social capital ------
 #"hh farming experience"
 #"hh association member"
@@ -370,6 +398,7 @@ write.csv(hh_association_member, "C:/Users/andreasanchez/OneDrive - CGIAR/Docume
 ####### FARM CHARACTERISTICS -----
 ##### Physical capital ------
 #"secured land tenure"
+#"units of livestock" AND "livestock owned"
 
 ## Land tenure security ----
 land_tenure_security<- data_adoption_clean%>%
@@ -447,6 +476,49 @@ str(land_tenure_security)
 (unique(land_tenure_security$x_metric_raw))
 
 write.csv(land_tenure_security, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_land_tenure_security.csv", row.names=FALSE)
+
+
+## Livestock ownership ----
+livestock_ownership<- data_adoption_clean%>%
+  filter(x_metric_recla== "units of livestock" | x_metric_recla== "livestock owned")
+
+length(sort(unique(livestock_ownership$id))) # Number of articles 25
+sort(unique(livestock_ownership$x_metric_unit))
+
+# Convert "miles" to "km"
+distance_market$coefficient_num[distance_market$x_metric_recla %in% c("distance to market", "distance to input market") &
+                                  distance_market$x_metric_unit %in% "miles"] <- 
+  distance_market$coefficient_num[distance_market$x_metric_recla %in% c("distance to market", "distance to input market") &
+                                    distance_market$x_metric_unit %in% "miles"] * 1.60934
+
+distance_market$variance_value_num[distance_market$x_metric_recla %in% c("distance to market", "distance to input market") &
+                                     distance_market$x_metric_unit %in% "miles"&
+                                     distance_market$variance_metric %in% c("standard error", "robust standard error")] <- 
+  distance_market$variance_value_num[distance_market$x_metric_recla %in% c("distance to market", "distance to input market") &
+                                       distance_market$x_metric_unit %in% "miles"&
+                                       distance_market$variance_metric %in% c("standard error", "robust standard error")] * 1.60934
+
+# Change the  x_metric_unit_recla
+distance_market$x_metric_unit_recla[distance_market$x_metric_recla %in% c("distance to market", "distance to input market")] <- distance_market$x_metric_unit
+
+distance_market$x_metric_unit_recla[distance_market$x_metric_recla %in% c("distance to market", "distance to input market") & 
+                                      distance_market$x_metric_unit %in% c("miles")] <- "km"
+
+# Change factor name
+distance_market$factor[distance_market$x_metric_recla %in% c("distance to market", "distance to input market")] <- "distance to market"
+
+# Factor_metric_unit
+distance_market$factor_metric_unit[distance_market$x_metric_recla %in% c("distance to market", "distance to input market")] <- 
+  paste(distance_market$factor, " (", distance_market$x_metric_unit_recla, ")", sep="")
+
+sort(unique(distance_market$factor_metric_unit))
+str(distance_market)
+(unique(distance_market$x_metric_raw))
+
+write.csv(distance_market, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_distance_market.csv", row.names=FALSE)
+
+
+
 
 ##### Biophysical ------
 #"farm size"
@@ -584,10 +656,6 @@ table(agricultural_extension$factor_metric_unit)
 
 
 write.csv(agricultural_extension, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_agricultural_extension.csv", row.names=FALSE)
-
-
-
-
 
 ##### Physical capital ------
 #"distance to market" AND "distance to input market"
