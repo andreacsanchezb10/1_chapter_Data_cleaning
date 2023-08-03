@@ -539,6 +539,56 @@ str(farm_size)
 write.csv(farm_size, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_farm_size.csv", row.names=FALSE)
 
 ####### CONTEXT CHARACTERISTICS -----
+##### Information ------
+#"agricultural extension"
+
+## Access to agricultural extension ----
+agricultural_extension <- data_adoption_clean%>%
+  filter(x_metric_recla== "access to agricultural extension"|x_metric_recla== "agricultural extension frequency")
+
+length(sort(unique(agricultural_extension$id))) # Number of articles 40
+sort(unique(agricultural_extension$x_metric_unit))
+
+table(agricultural_extension$x_metric_unit)
+
+# Change the  x_metric_unit_recla
+agricultural_extension$x_metric_unit_recla[agricultural_extension$x_metric_recla %in% 
+                                             c("access to agricultural extension", "agricultural extension frequency")] <- agricultural_extension$x_metric_unit
+
+# Convert to "number of contacts"
+"(number of visits)^2"
+"days per month"                                                                                                                                                   
+"number of contacts"                                                                                                                                               
+"number of contacts with extension staff in 2015"                                                                                                                  
+"number of visits"                                                                                                                                                 
+"number of visits by extension agents"
+
+agricultural_extension$x_metric_unit_recla[agricultural_extension$x_metric_unit %in% c("(number of visits)^2",
+                                                                                       "days per month",                                                                                                                                                   
+                                                                                       "number of contacts" ,                                                                                                                                              
+                                                                                       "number of contacts with extension staff in 2015",                                                                                                                  
+                                                                                       "number of visits" ,                                                                                                                                                
+                                                                                       "number of visits by extension agents")] <- "number of contacts"
+
+# Change factor name
+agricultural_extension$factor[agricultural_extension$x_metric_recla %in% c("access to agricultural extension", "agricultural extension frequency")] <- "agricultural extension"
+
+# Factor_metric_unit
+agricultural_extension$factor_metric_unit[agricultural_extension$x_metric_recla %in% c("access to agricultural extension", "agricultural extension frequency")] <- 
+  paste(agricultural_extension$factor, " (", agricultural_extension$x_metric_unit_recla, ")", sep="")
+
+sort(unique(agricultural_extension$factor_metric_unit))
+str(agricultural_extension)
+(unique(agricultural_extension$x_metric_raw))
+table(agricultural_extension$factor_metric_unit)
+
+
+write.csv(agricultural_extension, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_agricultural_extension.csv", row.names=FALSE)
+
+
+
+
+
 ##### Physical capital ------
 #"distance to market" AND "distance to input market"
 #"distance to road"
