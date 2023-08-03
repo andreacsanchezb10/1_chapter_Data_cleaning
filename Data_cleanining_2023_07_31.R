@@ -316,7 +316,7 @@ write.csv(h_size, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_P
 
 ##### Economic and financial capital ------
 #"access to credit"
-#"hh off-farm income"
+#"hh off-farm income" AND "hh engaged in off-farm activities"
 
 ## Access to credit ----
 access_credit<- data_adoption_clean%>%
@@ -347,6 +347,7 @@ write.csv(access_credit, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Ch
 #NOTES: ask Sarah if I should include here:
 #"off-farm business as main source of income
 #"reliance on external financial sources"
+#"agriculture as main source of income"
 off_farm_income<- data_adoption_clean%>%
   filter(x_metric_recla== "hh off-farm income"|  x_metric_recla=="hh engaged in off-farm activities")
 
@@ -463,6 +464,51 @@ str(hh_association_member)
 write.csv(hh_association_member, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_hh_association_member.csv", row.names=FALSE)
 
 ####### FARM CHARACTERISTICS -----
+##### Social capital ------
+#"farm labour force" AND "farm labour force (hired)" AND "farm labour force (non-hired)"
+
+## Farm labour force ----
+farm_labour<- data_adoption_clean%>%
+  filter(x_metric_recla== "farm labour force"| x_metric_recla== "farm labour force (hired)"| x_metric_recla== "farm labour force (non-hired)")
+
+length(sort(unique(farm_labour$id))) # Number of articles 17
+sort(unique(farm_labour$x_metric_unit))
+table(farm_labour$x_metric_unit)
+
+# Convert to "number of people"
+"Adult equivalent"                                                                                                              
+"man-days per ha"                                                                                                               
+"man days per ha"                                                                                                               
+"man/days*ha"                                                                                                                   
+"number of employees"                                                                                                           
+"Number of men in agriculture"                                                                                                  
+"number of people"                                                                                                              
+"Number of women in agriculture"                                                                                                
+"person/rai3 (1 rai=0.16 ha)"
+
+farm_labour$x_metric_unit_recla<- farm_labour$x_metric_unit
+farm_labour$x_metric_unit_recla[farm_labour$x_metric_unit %in% c("Adult equivalent" ,                                                                                                             
+                                                                 "man-days per ha" ,                                                                                                              
+                                                                 "man days per ha" ,                                                                                                              
+                                                                 "man/days*ha" ,                                                                                                                  
+                                                                 "number of employees" ,                                                                                                          
+                                                                 "Number of men in agriculture",                                                                                                  
+                                                                 "number of people" ,                                                                                                             
+                                                                 "Number of women in agriculture",                                                                                                
+                                                                 "person/rai3 (1 rai=0.16 ha)")] <- "number of people"
+
+# Change factor name
+farm_labour$factor <- "farm labour force"
+
+# Factor_metric_unit
+farm_labour$factor_metric_unit <- paste(farm_labour$factor, " (", farm_labour$x_metric_unit_recla, ")", sep="")
+
+sort(unique(farm_labour$factor_metric_unit))
+str(farm_labour)
+(unique(farm_labour$x_metric_raw))
+
+write.csv(farm_labour, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_farm_labour.csv", row.names=FALSE)
+
 ##### Physical capital ------
 #"secured land tenure"
 #"units of livestock" AND "livestock owned"
