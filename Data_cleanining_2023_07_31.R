@@ -316,7 +316,7 @@ write.csv(h_size, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_P
 
 ##### Economic and financial capital ------
 #"access to credit"
-#"h income"
+#"hh off-farm income"
 
 ## Access to credit ----
 access_credit<- data_adoption_clean%>%
@@ -351,23 +351,46 @@ length(sort(unique(off_farm_income$id))) # Number of articles 20
 sort(unique(off_farm_income$x_metric_unit))
 
 # Change the  x_metric_unit_recla
-access_credit$x_metric_unit_recla[access_credit$x_metric_recla %in% "access to credit"] <- access_credit$x_metric_unit
+off_farm_income$x_metric_unit_recla <- off_farm_income$x_metric_unit
 
+#Change to "percentage of income from off-farm activities"
+"Percent share of nonfarm income to total household income"                                                       
+"percentage of household income"                                                                                  
+"Percentage of household income from off-farm employment (1 = <20%, 2 = 20–40%, 3 = 41–60%, 4 = 61–80%, 5 = >80%)"
+"percentage of non-agricultural income"
+
+off_farm_income$x_metric_unit_recla[off_farm_income$x_metric_unit %in% c("Percent share of nonfarm income to total household income",
+                                                                         "percentage of household income",
+                                                                         "Percentage of household income from off-farm employment (1 = <20%, 2 = 20–40%, 3 = 41–60%, 4 = 61–80%, 5 = >80%)",
+                                                                         "percentage of non-agricultural income")] <- "percentage of income from off-farm activities"
+#Change to "1= yes, 0= no"
+#"1= yes, 0= otherwise"
+off_farm_income$x_metric_unit_recla[off_farm_income$x_metric_unit %in% c("1= yes, 0= otherwise")] <- "1= yes, 0= no"
+
+#Change to "country currency"
+"naira"                                                                                                           
+"Nigeria naira"                                                                                                   
+"Nigerian currency (N + 0.0051 USS)"
+"pesos"                                                                                                           
+"SDG/man-day"                                                                                                     
+"USS per month/household"
+off_farm_income$x_metric_unit_recla[off_farm_income$x_metric_unit %in% c("naira",                                                                                                           
+                                                                         "Nigeria naira",                                                                                                   
+                                                                         "Nigerian currency (N + 0.0051 USS)",
+                                                                         "pesos",                                                                                                           
+                                                                         "SDG/man-day",                                                                                                     
+                                                                         "USS per month/household")] <- "country currency"
 # Change factor name
-access_credit$factor[access_credit$x_metric_recla %in% "access to credit"] <- "access to credit"
+off_farm_income$factor <- "off-farm income"
 
 # Factor_metric_unit
-access_credit$factor_metric_unit[access_credit$x_metric_recla %in% "access to credit"] <- 
-  paste(access_credit$factor, " (", access_credit$x_metric_unit_recla, ")", sep="")
+off_farm_income$factor_metric_unit <- paste(off_farm_income$factor, " (", off_farm_income$x_metric_unit_recla, ")", sep="")
 
-sort(unique(access_credit$factor_metric_unit))
-str(access_credit)
-(unique(access_credit$x_metric_raw))
+sort(unique(off_farm_income$factor_metric_unit))
+str(off_farm_income)
+(unique(off_farm_income$x_metric_raw))
 
-write.csv(access_credit, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_access_credit.csv", row.names=FALSE)
-
-
-
+write.csv(off_farm_income, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_off_farm_income.csv", row.names=FALSE)
 
 ##### Information/Social capital ------
 #"hh farming experience"
