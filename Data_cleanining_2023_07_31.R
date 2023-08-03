@@ -316,6 +316,7 @@ write.csv(h_size, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_P
 
 ##### Economic and financial capital ------
 #"access to credit"
+#"h income"
 
 ## Access to credit ----
 access_credit<- data_adoption_clean%>%
@@ -339,6 +340,33 @@ str(access_credit)
 (unique(access_credit$x_metric_raw))
 
 write.csv(access_credit, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_access_credit.csv", row.names=FALSE)
+
+
+
+## Household off-farm income ----
+off_farm_income<- data_adoption_clean%>%
+  filter(x_metric_recla== "hh off-farm income")
+
+length(sort(unique(off_farm_income$id))) # Number of articles 20
+sort(unique(off_farm_income$x_metric_unit))
+
+# Change the  x_metric_unit_recla
+access_credit$x_metric_unit_recla[access_credit$x_metric_recla %in% "access to credit"] <- access_credit$x_metric_unit
+
+# Change factor name
+access_credit$factor[access_credit$x_metric_recla %in% "access to credit"] <- "access to credit"
+
+# Factor_metric_unit
+access_credit$factor_metric_unit[access_credit$x_metric_recla %in% "access to credit"] <- 
+  paste(access_credit$factor, " (", access_credit$x_metric_unit_recla, ")", sep="")
+
+sort(unique(access_credit$factor_metric_unit))
+str(access_credit)
+(unique(access_credit$x_metric_raw))
+
+write.csv(access_credit, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_access_credit.csv", row.names=FALSE)
+
+
 
 
 ##### Information/Social capital ------
@@ -477,7 +505,6 @@ str(land_tenure_security)
 
 write.csv(land_tenure_security, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_land_tenure_security.csv", row.names=FALSE)
 
-
 ## Livestock ownership ----
 livestock_ownership<- data_adoption_clean%>%
   filter(x_metric_recla== "units of livestock" | x_metric_recla== "livestock owned")
@@ -485,40 +512,62 @@ livestock_ownership<- data_adoption_clean%>%
 length(sort(unique(livestock_ownership$id))) # Number of articles 25
 sort(unique(livestock_ownership$x_metric_unit))
 
-# Convert "miles" to "km"
-distance_market$coefficient_num[distance_market$x_metric_recla %in% c("distance to market", "distance to input market") &
-                                  distance_market$x_metric_unit %in% "miles"] <- 
-  distance_market$coefficient_num[distance_market$x_metric_recla %in% c("distance to market", "distance to input market") &
-                                    distance_market$x_metric_unit %in% "miles"] * 1.60934
+#Convert  "TLU (10^-1)" to TLU
+livestock_ownership$coefficient_num[livestock_ownership$x_metric_unit %in% "TLU (10^-1)"] <- 
+  livestock_ownership$coefficient_num[livestock_ownership$x_metric_unit %in% "TLU (10^-1)"] * 10^-1
 
-distance_market$variance_value_num[distance_market$x_metric_recla %in% c("distance to market", "distance to input market") &
-                                     distance_market$x_metric_unit %in% "miles"&
-                                     distance_market$variance_metric %in% c("standard error", "robust standard error")] <- 
-  distance_market$variance_value_num[distance_market$x_metric_recla %in% c("distance to market", "distance to input market") &
-                                       distance_market$x_metric_unit %in% "miles"&
-                                       distance_market$variance_metric %in% c("standard error", "robust standard error")] * 1.60934
+livestock_ownership$variance_value_num[livestock_ownership$x_metric_unit %in% "TLU (10^-1)"&
+                                         livestock_ownership$variance_metric %in% c("standard error", "robust standard error")] <- 
+  livestock_ownership$variance_value_num[livestock_ownership$x_metric_unit %in% "TLU (10^-1)"&
+                                       livestock_ownership$variance_metric %in% c("standard error", "robust standard error")] * 10^-1
 
 # Change the  x_metric_unit_recla
-distance_market$x_metric_unit_recla[distance_market$x_metric_recla %in% c("distance to market", "distance to input market")] <- distance_market$x_metric_unit
+livestock_ownership$x_metric_unit_recla[livestock_ownership$x_metric_recla %in% c("units of livestock", "livestock owned")] <- livestock_ownership$x_metric_unit
 
-distance_market$x_metric_unit_recla[distance_market$x_metric_recla %in% c("distance to market", "distance to input market") & 
-                                      distance_market$x_metric_unit %in% c("miles")] <- "km"
+# Convert to "TLU"
+livestock_ownership$x_metric_unit_recla[livestock_ownership$x_metric_unit %in% c("TLU (10^-1)", "TLU/ha")] <- "TLU"
+
+# Convert to "number of animals owned"
+"livestock units"
+"number"
+"number of cattle"
+"number of cattle heads per hectare" 
+"number of goats and sheep per hectare"
+"number of livestock owned"                                                    
+"number of other cattle"
+"number of oxen"
+"number of pack animals"
+"number of small rumiants"
+
+livestock_ownership$x_metric_unit_recla[livestock_ownership$x_metric_unit %in% c("livestock units",
+                                                                                 "number",
+                                                                                 "number of cattle",
+                                                                                 "number of cattle heads per hectare", 
+                                                                                 "number of goats and sheep per hectare",
+                                                                                 "number of livestock owned",                                                    
+                                                                                 "number of other cattle",
+                                                                                 "number of oxen",
+                                                                                 "number of pack animals",
+                                                                                 "number of small rumiants")] <- "Units of animal owned"
+
+# Convert to "1= yes, 0= no"
+"1= ownership, 0= otherwise"
+"1=Farmers’ house holds owned draught cattle for crop production, 0= otherwise"
+livestock_ownership$x_metric_unit_recla[livestock_ownership$x_metric_unit %in% c("1= ownership, 0= otherwise",
+                                                                          "1=Farmers’ house holds owned draught cattle for crop production, 0= otherwise")] <- "1= yes, 0= no"
 
 # Change factor name
-distance_market$factor[distance_market$x_metric_recla %in% c("distance to market", "distance to input market")] <- "distance to market"
+livestock_ownership$factor <- "livestock ownership"
 
 # Factor_metric_unit
-distance_market$factor_metric_unit[distance_market$x_metric_recla %in% c("distance to market", "distance to input market")] <- 
-  paste(distance_market$factor, " (", distance_market$x_metric_unit_recla, ")", sep="")
+livestock_ownership$factor_metric_unit<- paste(livestock_ownership$factor, " (", livestock_ownership$x_metric_unit_recla, ")", sep="")
 
-sort(unique(distance_market$factor_metric_unit))
-str(distance_market)
-(unique(distance_market$x_metric_raw))
+sort(unique(livestock_ownership$factor_metric_unit))
+str(livestock_ownership)
+(unique(livestock_ownership$x_metric_raw))
+table(livestock_ownership$factor_metric_unit)
 
-write.csv(distance_market, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_distance_market.csv", row.names=FALSE)
-
-
-
+write.csv(livestock_ownership, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_livestock_ownership.csv", row.names=FALSE)
 
 ##### Biophysical ------
 #"farm size"
