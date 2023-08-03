@@ -142,7 +142,7 @@ data_adoption_clean<- data_adoption%>%
   #Select only the columns that you are going to use
   dplyr::select(id,model_id,main_crop, intervention_recla,intervention_recla_detail_1,
                 intervention_recla_detail_2,intervention_recla_detail_3,
-                y_metric_recla, effect_size_type,x_metric_recla, x_metric_unit,
+                y_metric_recla, effect_size_type,x_metric_raw,x_metric_recla, x_metric_unit,
                 model_analysis_raw,model_method,coefficient_type, 
                 coefficient, coefficient_num,
                 variance_metric,variance_value,variance_value_num,
@@ -183,6 +183,7 @@ hh_age$factor_metric_unit[hh_age$x_metric_recla %in% "hh age"] <-
 
 sort(unique(hh_age$factor_metric_unit))
 str(hh_age)
+sort(unique(hh_age$x_metric_raw))
 
 write.csv(hh_age, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_hh_age.csv", row.names=FALSE)
 
@@ -212,6 +213,7 @@ hh_gender$factor_metric_unit[hh_gender$x_metric_recla %in% "hh gender"] <-
 
 sort(unique(hh_gender$factor_metric_unit))
 str(hh_gender)
+sort(unique(hh_gender$x_metric_raw))
 
 write.csv(hh_gender, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_hh_gender.csv", row.names=FALSE)
 
@@ -270,7 +272,7 @@ sort(unique(hh_education$x_metric_unit))
 table(hh_education$x_metric_unit)
 
 # Change the  x_metric_unit_recla
-hh_education$x_metric_unit_recla[hh_education$x_metric_recla %in% "hh education"] <- factors_clean$x_metric_unit
+hh_education$x_metric_unit_recla[hh_education$x_metric_recla %in% "hh education"] <- hh_education$x_metric_unit
 
 # Change factor name
 hh_education$factor[hh_education$x_metric_recla %in% "hh education"] <- "hh education"
@@ -281,6 +283,7 @@ hh_education$factor_metric_unit[hh_education$x_metric_recla %in% "hh education"]
 
 sort(unique(hh_education$factor_metric_unit))
 str(hh_education)
+(unique(hh_education$x_metric_raw))
 
 write.csv(hh_education, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_hh_education.csv", row.names=FALSE)
 
@@ -306,11 +309,13 @@ h_size$factor_metric_unit[h_size$x_metric_recla %in% "h size"] <-
 
 sort(unique(h_size$factor_metric_unit))
 str(h_size)
+(unique(h_size$x_metric_raw))
 
 write.csv(h_size, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_h_size.csv", row.names=FALSE)
 
-##### Information ------
+##### Information/Social capital ------
 #"hh farming experience"
+#"hh association member"
 
 ## Household farming experience ----
 hh_farming_experience<- data_adoption_clean%>%
@@ -333,10 +338,116 @@ hh_farming_experience$factor_metric_unit[hh_farming_experience$x_metric_recla %i
 
 sort(unique(hh_farming_experience$factor_metric_unit))
 str(hh_farming_experience)
+(unique(hh_farming_experience$x_metric_raw))
 
 write.csv(hh_farming_experience, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_hh_farming_experience.csv", row.names=FALSE)
 
+## Household head association member ----
+hh_association_member<- data_adoption_clean%>%
+  filter(x_metric_recla== "hh association member")
+
+length(sort(unique(hh_association_member$id))) # Number of articles 36
+sort(unique(hh_association_member$x_metric_unit))
+
+table(hh_association_member$x_metric_unit)
+
+# Change the  x_metric_unit_recla
+hh_association_member$x_metric_unit_recla[hh_association_member$x_metric_recla %in% "hh association member"] <- hh_association_member$x_metric_unit
+
+# Change factor name
+hh_association_member$factor[hh_association_member$x_metric_recla %in% "hh association member"] <- "hh association member"
+
+# Factor_metric_unit
+hh_association_member$factor_metric_unit[hh_association_member$x_metric_recla %in% "hh association member"] <- 
+  paste(hh_association_member$factor, " (", hh_association_member$x_metric_unit_recla, ")", sep="")
+
+sort(unique(hh_association_member$factor_metric_unit))
+str(hh_association_member)
+(unique(hh_association_member$x_metric_raw))
+
+write.csv(hh_association_member, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_hh_association_member.csv", row.names=FALSE)
+
 ####### FARM CHARACTERISTICS -----
+##### Physical capital ------
+#"secured land tenure"
+
+## Land tenure security ----
+land_tenure_security<- data_adoption_clean%>%
+  filter(x_metric_recla== "secured land tenure")
+
+length(sort(unique(land_tenure_security$id))) # Number of articles 35
+sort(unique(land_tenure_security$x_metric_unit))
+table(land_tenure_security$x_metric_unit)
+
+# Convert to "1= secure land tenure, 0= otherwise"
+#"1 = family farm, 0 = own farm"
+#"1 = share croppers, 0 = own farm"
+
+land_tenure_security$coefficient_num[land_tenure_security$x_metric_unit %in% c("1 = family farm, 0 = own farm",
+                                                                               "1 = share croppers, 0 = own farm")] <- 
+  land_tenure_security$coefficient_num[land_tenure_security$x_metric_unit %in% c("1 = family farm, 0 = own farm",
+                                                                                 "1 = share croppers, 0 = own farm")] * -1
+
+land_tenure_security$x_metric_unit_recla[land_tenure_security$x_metric_recla %in% "secured land tenure"] <- land_tenure_security$x_metric_unit
+land_tenure_security$x_metric_unit_recla[land_tenure_security$x_metric_unit %in% c("1 = family farm, 0 = own farm",
+                                                             "1 = share croppers, 0 = own farm")] <- "1= secure, 0= otherwise"
+# Convert to "1= secure land tenure, 0= otherwise"
+"1 = family had land right certificate of rubber land, 0 = otherwise"
+"1 = farmer has secure tenurial rights, 0 = otherwise."
+"1= Fully-owned; 0=partially-owned, shared and leased"
+"1= if a household head feels “secured”, 0= otherwise"
+"1= land owned, 0= otherwise"                                                                                   
+"1= land title, 0=otherwise"
+"1= owned, 0= no"                                                                                               
+"1= owner, 0= otherwise"                                                                                        
+"1= Private ownership through clearance, 0= otherwise"
+"1= purchase, 0= otherwise"
+"1= single family, 0= otherwise"
+"1= yes, 0= no"                                                                                                 
+"1= yes, 0= otherwise"                                                                                          
+"1=owned, 0=rented"                                                                                             
+"1=owned, 0=rented in"
+land_tenure_security$x_metric_unit_recla[land_tenure_security$x_metric_unit %in% c("1 = family had land right certificate of rubber land, 0 = otherwise",
+                                                                                   "1 = farmer has secure tenurial rights, 0 = otherwise.",
+                                                                                   "1= Fully-owned; 0=partially-owned, shared and leased",
+                                                                                   "1= if a household head feels “secured”, 0= otherwise",
+                                                                                   "1= land owned, 0= otherwise"   ,                                                                                
+                                                                                   "1= land title, 0=otherwise",
+                                                                                   "1= owned, 0= no"    ,                                                                                           
+                                                                                   "1= owner, 0= otherwise"  ,                                                                                      
+                                                                                   "1= Private ownership through clearance, 0= otherwise",
+                                                                                   "1= purchase, 0= otherwise",
+                                                                                   "1= single family, 0= otherwise",
+                                                                                   "1= yes, 0= no"       ,                                                                                          
+                                                                                   "1= yes, 0= otherwise"  ,                                                                                        
+                                                                                   "1=owned, 0=rented" ,                                                                                            
+                                                                                   "1=owned, 0=rented in")] <- "1= secure, 0= otherwise"
+# Convert to "percentage to secure land"
+"percentage of farm acres owned"                                                                                
+"percentage of total landholding that is owned"                                                                 
+"proportion"                                                                                                    
+"proportion of cultivated area with secure tenure"
+land_tenure_security$x_metric_unit_recla[land_tenure_security$x_metric_unit %in% c("percentage of farm acres owned",                                                                                
+                                                                                   "percentage of total landholding that is owned",                                                                 
+                                                                                   "proportion" ,                                                                                                   
+                                                                                   "proportion of cultivated area with secure tenure")] <- "percentage to secure land"
+
+# Change factor name
+land_tenure_security$factor[land_tenure_security$x_metric_recla %in% "secured land tenure"] <- "secured land tenure"
+
+# Factor_metric_unit
+land_tenure_security$factor_metric_unit[land_tenure_security$x_metric_recla %in% "secured land tenure"] <- 
+  paste(land_tenure_security$factor, " (", land_tenure_security$x_metric_unit_recla, ")", sep="")
+
+#NOTES land tenure security
+# 607 excluded: Not clear which is most secure tenure system
+# 750 excluded: Not clear which is most secure tenure system
+sort(unique(land_tenure_security$factor_metric_unit))
+str(land_tenure_security)
+(unique(land_tenure_security$x_metric_raw))
+
+write.csv(land_tenure_security, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_land_tenure_security.csv", row.names=FALSE)
+
 ##### Biophysical ------
 #"farm size"
 ## Farm size ----
@@ -423,6 +534,7 @@ farm_size$factor_metric_unit[farm_size$x_metric_recla %in% "farm size"] <-
 
 sort(unique(farm_size$factor_metric_unit))
 str(farm_size)
+(unique(farm_size$x_metric_raw))
 
 write.csv(farm_size, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_farm_size.csv", row.names=FALSE)
 
@@ -474,6 +586,92 @@ distance_market$factor_metric_unit[distance_market$x_metric_recla %in% c("distan
 
 sort(unique(distance_market$factor_metric_unit))
 str(distance_market)
+(unique(distance_market$x_metric_raw))
 
 write.csv(distance_market, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_distance_market.csv", row.names=FALSE)
+
+
+## Distance to road (km) ----
+distance_road<- data_adoption_clean%>%
+  filter(x_metric_recla== "distance to road")
+
+length(sort(unique(distance_road$id))) # Number of articles 10
+sort(unique(distance_road$x_metric_unit))
+#[1] "1= if access to motor road is > 1 kilometer distance, 0= otherwise" "hour"                                                              
+#[3] "km"                                                                 "metres"                                                            
+#[5] "miles"                                                              "minutes"
+
+table(distance_road$x_metric_unit)
+
+# Convert "miles" to "km"
+distance_road$coefficient_num[distance_road$x_metric_recla %in% c("distance to road") &
+                                  distance_road$x_metric_unit %in% "miles"] <- 
+  distance_road$coefficient_num[distance_road$x_metric_recla %in% c("distance to road") &
+                                    distance_road$x_metric_unit %in% "miles"] * 1.60934
+
+distance_road$variance_value_num[distance_road$x_metric_recla %in% c("distance to road") &
+                                     distance_road$x_metric_unit %in% "miles"&
+                                     distance_road$variance_metric %in% c("standard error", "robust standard error")] <- 
+  distance_road$variance_value_num[distance_road$x_metric_recla %in% c("distance to road") &
+                                       distance_road$x_metric_unit %in% "miles"&
+                                       distance_road$variance_metric %in% c("standard error", "robust standard error")] * 1.60934
+
+# Change the  x_metric_unit_recla
+distance_road$x_metric_unit_recla[distance_road$x_metric_recla %in% c("distance to road")] <- distance_road$x_metric_unit
+
+distance_road$x_metric_unit_recla[distance_road$x_metric_recla %in% c("distance to road") & 
+                                      distance_road$x_metric_unit %in% c("miles")] <- "km"
+
+# Convert "metres" to "km"
+distance_road$coefficient_num[distance_road$x_metric_recla %in% c("distance to road") &
+                                distance_road$x_metric_unit %in% "metres"] <- 
+  distance_road$coefficient_num[distance_road$x_metric_recla %in% c("distance to road") &
+                                  distance_road$x_metric_unit %in% "metres"] / 1000 
+
+distance_road$variance_value_num[distance_road$x_metric_recla %in% c("distance to road") &
+                                   distance_road$x_metric_unit %in% "metres"&
+                                   distance_road$variance_metric %in% c("standard error", "robust standard error")] <- 
+  distance_road$variance_value_num[distance_road$x_metric_recla %in% c("distance to road") &
+                                     distance_road$x_metric_unit %in% "metres"&
+                                     distance_road$variance_metric %in% c("standard error", "robust standard error")] / 1000
+
+# Change the  x_metric_unit_recla
+distance_road$x_metric_unit_recla[distance_road$x_metric_recla %in% c("distance to road") & 
+                                    distance_road$x_metric_unit %in% c("metres")] <- "km"
+
+# Convert "hours" to "minutes"
+distance_road$coefficient_num[distance_road$x_metric_recla %in% c("distance to road") &
+                                distance_road$x_metric_unit %in% "hour"] <- 
+  distance_road$coefficient_num[distance_road$x_metric_recla %in% c("distance to road") &
+                                  distance_road$x_metric_unit %in% "hour"] *60
+
+distance_road$variance_value_num[distance_road$x_metric_recla %in% c("distance to road") &
+                                   distance_road$x_metric_unit %in% "hour"&
+                                   distance_road$variance_metric %in% c("standard error", "robust standard error")] <- 
+  distance_road$variance_value_num[distance_road$x_metric_recla %in% c("distance to road") &
+                                     distance_road$x_metric_unit %in% "hour"&
+                                     distance_road$variance_metric %in% c("standard error", "robust standard error")] *60
+
+# Change the  x_metric_unit_recla
+distance_road$x_metric_unit_recla[distance_road$x_metric_recla %in% c("distance to road") & 
+                                    distance_road$x_metric_unit %in% c("hour")] <- "minutes"
+
+# Change factor name
+distance_road$factor[distance_road$x_metric_recla %in% c("distance to road")] <- "distance to market"
+
+# Factor_metric_unit
+distance_road$factor_metric_unit[distance_road$x_metric_recla %in% c("distance to road")] <- 
+  paste(distance_road$factor, " (", distance_road$x_metric_unit_recla, ")", sep="")
+
+sort(unique(distance_road$factor_metric_unit))
+str(distance_road)
+(unique(distance_road$x_metric_raw))
+
+write.csv(distance_road, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_distance_road.csv", row.names=FALSE)
+
+
+
+articles_count <- data_adoption_clean %>%
+  group_by(x_metric_recla) %>%
+  summarise(n_articles = n_distinct(id))
 
