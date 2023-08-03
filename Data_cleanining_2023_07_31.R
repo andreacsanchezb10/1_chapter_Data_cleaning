@@ -193,7 +193,7 @@ hh_gender<- data_adoption_clean%>%
 
 length(sort(unique(hh_gender$id))) # Number of articles 49
 sort(unique(hh_gender$x_metric_unit))
-#[1] "1= female, 0= male" "1= male, 0= female" "1= male, 2= female" "nd" 
+#"1= female, 0= male" "1= male, 0= female" "1= male, 2= female" "nd" 
 table(hh_gender$x_metric_unit)
 
 # Multiply "1= female, 0= male" AND "1= male, 2= female" * -1 to convert to "1= male, 0= female"
@@ -344,11 +344,20 @@ write.csv(access_credit, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Ch
 
 
 ## Household off-farm income ----
+#NOTES: ask Sarah if I should include here:
+#"off-farm business as main source of income
+#"reliance on external financial sources"
 off_farm_income<- data_adoption_clean%>%
-  filter(x_metric_recla== "hh off-farm income")
+  filter(x_metric_recla== "hh off-farm income"|  x_metric_recla=="hh engaged in off-farm activities")
 
-length(sort(unique(off_farm_income$id))) # Number of articles 20
+length(sort(unique(off_farm_income$id))) # Number of articles 37
 sort(unique(off_farm_income$x_metric_unit))
+
+
+# Multiply "off-farm income (1= if full-time farmer; 0= otherwise)" * -1 to convert to "1= off-farm income, 0= full-time farmer"
+off_farm_income$coefficient_num[off_farm_income$x_metric_unit %in% c("1= if full-time farmer; 0= otherwise")] <- 
+  off_farm_income$coefficient_num[off_farm_income$x_metric_unit %in% c("1= if full-time farmer; 0= otherwise")] * -1
+
 
 # Change the  x_metric_unit_recla
 off_farm_income$x_metric_unit_recla <- off_farm_income$x_metric_unit
@@ -365,7 +374,13 @@ off_farm_income$x_metric_unit_recla[off_farm_income$x_metric_unit %in% c("Percen
                                                                          "percentage of non-agricultural income")] <- "percentage of income from off-farm activities"
 #Change to "1= yes, 0= no"
 #"1= yes, 0= otherwise"
-off_farm_income$x_metric_unit_recla[off_farm_income$x_metric_unit %in% c("1= yes, 0= otherwise")] <- "1= yes, 0= no"
+"off-farm income (1= hh has a salaried employment, 0= no)"
+"off-farm income (1= salary employment, 0= no secondary income)"
+
+off_farm_income$x_metric_unit_recla[off_farm_income$x_metric_unit %in% c("1= yes, 0= otherwise",
+                                                                         "1= hh has a salaried employment, 0= no",
+                                                                         "1= if full-time farmer; 0= otherwise",
+                                                                         "1= salary employment, 0= no secondary income")] <- "1= yes, 0= no"
 
 #Change to "country currency"
 "naira"                                                                                                           
@@ -389,6 +404,7 @@ off_farm_income$factor_metric_unit <- paste(off_farm_income$factor, " (", off_fa
 sort(unique(off_farm_income$factor_metric_unit))
 str(off_farm_income)
 (unique(off_farm_income$x_metric_raw))
+table(off_farm_income$factor_metric_unit)
 
 write.csv(off_farm_income, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_off_farm_income.csv", row.names=FALSE)
 
