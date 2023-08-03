@@ -856,64 +856,48 @@ sort(unique(distance_road$x_metric_unit))
 table(distance_road$x_metric_unit)
 
 # Convert "miles" to "km"
-distance_road$coefficient_num[distance_road$x_metric_recla %in% c("distance to road") &
-                                  distance_road$x_metric_unit %in% "miles"] <- 
-  distance_road$coefficient_num[distance_road$x_metric_recla %in% c("distance to road") &
-                                    distance_road$x_metric_unit %in% "miles"] * 1.60934
+distance_road$coefficient_num[distance_road$x_metric_unit %in% "miles"] <- 
+  distance_road$coefficient_num[distance_road$x_metric_unit %in% "miles"] * 1.60934
 
-distance_road$variance_value_num[distance_road$x_metric_recla %in% c("distance to road") &
-                                     distance_road$x_metric_unit %in% "miles"&
+distance_road$variance_value_num[distance_road$x_metric_unit %in% "miles"&
                                      distance_road$variance_metric %in% c("standard error", "robust standard error")] <- 
-  distance_road$variance_value_num[distance_road$x_metric_recla %in% c("distance to road") &
-                                       distance_road$x_metric_unit %in% "miles"&
+  distance_road$variance_value_num[distance_road$x_metric_unit %in% "miles"&
                                        distance_road$variance_metric %in% c("standard error", "robust standard error")] * 1.60934
 
 # Change the  x_metric_unit_recla
-distance_road$x_metric_unit_recla[distance_road$x_metric_recla %in% c("distance to road")] <- distance_road$x_metric_unit
+distance_road$x_metric_unit_recla <- distance_road$x_metric_unit
 
-distance_road$x_metric_unit_recla[distance_road$x_metric_recla %in% c("distance to road") & 
-                                      distance_road$x_metric_unit %in% c("miles")] <- "km"
+distance_road$x_metric_unit_recla[distance_road$x_metric_unit %in% c("miles")] <- "km"
 
 # Convert "metres" to "km"
-distance_road$coefficient_num[distance_road$x_metric_recla %in% c("distance to road") &
-                                distance_road$x_metric_unit %in% "metres"] <- 
-  distance_road$coefficient_num[distance_road$x_metric_recla %in% c("distance to road") &
-                                  distance_road$x_metric_unit %in% "metres"] / 1000 
+distance_road$coefficient_num[distance_road$x_metric_unit %in% "metres"] <- 
+  distance_road$coefficient_num[distance_road$x_metric_unit %in% "metres"] / 1000 
 
-distance_road$variance_value_num[distance_road$x_metric_recla %in% c("distance to road") &
-                                   distance_road$x_metric_unit %in% "metres"&
+distance_road$variance_value_num[distance_road$x_metric_unit %in% "metres"&
                                    distance_road$variance_metric %in% c("standard error", "robust standard error")] <- 
-  distance_road$variance_value_num[distance_road$x_metric_recla %in% c("distance to road") &
-                                     distance_road$x_metric_unit %in% "metres"&
+  distance_road$variance_value_num[distance_road$x_metric_unit %in% "metres"&
                                      distance_road$variance_metric %in% c("standard error", "robust standard error")] / 1000
 
 # Change the  x_metric_unit_recla
-distance_road$x_metric_unit_recla[distance_road$x_metric_recla %in% c("distance to road") & 
-                                    distance_road$x_metric_unit %in% c("metres")] <- "km"
+distance_road$x_metric_unit_recla[distance_road$x_metric_unit %in% c("metres")] <- "km"
 
 # Convert "hours" to "minutes"
-distance_road$coefficient_num[distance_road$x_metric_recla %in% c("distance to road") &
-                                distance_road$x_metric_unit %in% "hour"] <- 
-  distance_road$coefficient_num[distance_road$x_metric_recla %in% c("distance to road") &
-                                  distance_road$x_metric_unit %in% "hour"] *60
+distance_road$coefficient_num[distance_road$x_metric_unit %in% "hour"] <- 
+  distance_road$coefficient_num[distance_road$x_metric_unit %in% "hour"] *60
 
-distance_road$variance_value_num[distance_road$x_metric_recla %in% c("distance to road") &
-                                   distance_road$x_metric_unit %in% "hour"&
+distance_road$variance_value_num[distance_road$x_metric_unit %in% "hour"&
                                    distance_road$variance_metric %in% c("standard error", "robust standard error")] <- 
-  distance_road$variance_value_num[distance_road$x_metric_recla %in% c("distance to road") &
-                                     distance_road$x_metric_unit %in% "hour"&
+  distance_road$variance_value_num[distance_road$x_metric_unit %in% "hour"&
                                      distance_road$variance_metric %in% c("standard error", "robust standard error")] *60
 
 # Change the  x_metric_unit_recla
-distance_road$x_metric_unit_recla[distance_road$x_metric_recla %in% c("distance to road") & 
-                                    distance_road$x_metric_unit %in% c("hour")] <- "minutes"
+distance_road$x_metric_unit_recla[distance_road$x_metric_unit %in% c("hour")] <- "minutes"
 
 # Change factor name
-distance_road$factor[distance_road$x_metric_recla %in% c("distance to road")] <- "distance to market"
+distance_road$factor <- "distance to road"
 
 # Factor_metric_unit
-distance_road$factor_metric_unit[distance_road$x_metric_recla %in% c("distance to road")] <- 
-  paste(distance_road$factor, " (", distance_road$x_metric_unit_recla, ")", sep="")
+distance_road$factor_metric_unit <- paste(distance_road$factor, " (", distance_road$x_metric_unit_recla, ")", sep="")
 
 sort(unique(distance_road$factor_metric_unit))
 str(distance_road)
