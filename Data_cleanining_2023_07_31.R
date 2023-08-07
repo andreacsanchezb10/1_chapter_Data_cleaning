@@ -4,103 +4,6 @@ library(readxl)
 library(dplyr)
 library(funModeling)
 
-### Country-Continent list -------------
-continent_list <- structure(list(country = c("Afghanistan", "Åland Islands", "Albania", 
-                                             "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", 
-                                             "Antarctica", "Antigua and Barbuda", "Argentina", "Armenia", 
-                                             "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", 
-                                             "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", 
-                                             "Bermuda", "Bhutan", "Bolivia (Plurinational State of)", "Bonaire, Sint Eustatius and Saba", 
-                                             "Bosnia and Herzegovina", "Botswana", "Bouvet Island", "Brazil", 
-                                             "British Indian Ocean Territory", "Brunei Darussalam", "Bulgaria", 
-                                             "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", 
-                                             "Cabo Verde", "Cayman Islands", "Central African Republic", "Chad", 
-                                             "Chile", "China", "Christmas Island", "Cocos (Keeling) Islands", 
-                                             "Colombia", "Comoros", "Congo", "Congo (Democratic Republic of the)", 
-                                             "Cook Islands", "Costa Rica", "Côte d'Ivoire", "Croatia", "Cuba", 
-                                             "Curaçao", "Cyprus", "Czech Republic", "Denmark", "Djibouti", 
-                                             "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", 
-                                             "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Falkland Islands (Malvinas)", 
-                                             "Faroe Islands", "Fiji", "Finland", "France", "French Guiana", 
-                                             "French Polynesia", "French Southern Territories", "Gabon", "Gambia", 
-                                             "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", 
-                                             "Grenada", "Guadeloupe", "Guam", "Guatemala", "Guernsey", "Guinea", 
-                                             "Guinea-Bissau", "Guyana", "Haiti", "Heard Island and McDonald Islands", 
-                                             "Holy See", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", 
-                                             "Indonesia", "Iran (Islamic Republic of)", "Iraq", "Ireland", 
-                                             "Isle of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", 
-                                             "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea (Democratic People's Republic of)", 
-                                             "Korea (Republic of)", "Kuwait", "Kyrgyzstan", "Lao People's Democratic Republic", 
-                                             "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", 
-                                             "Lithuania", "Luxembourg", "Macao", "Macedonia (the former Yugoslav Republic of)", 
-                                             "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", 
-                                             "Marshall Islands", "Martinique", "Mauritania", "Mauritius", 
-                                             "Mayotte", "Mexico", "Micronesia (Federated States of)", "Moldova", 
-                                             "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", 
-                                             "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", 
-                                             "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", 
-                                             "Niue", "Norfolk Island", "Northern Mariana Islands", "Norway", 
-                                             "Oman", "Pakistan", "Palau", "Palestine, State of", "Panama", 
-                                             "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Pitcairn", 
-                                             "Poland", "Portugal", "Puerto Rico", "Qatar", "Réunion", "Romania", 
-                                             "Russian Federation", "Rwanda", "Saint Barthélemy", "Saint Helena, Ascension and Tristan da Cunha", 
-                                             "Saint Kitts and Nevis", "Saint Lucia", "Saint Martin (French part)", 
-                                             "Saint Pierre and Miquelon", "Saint Vincent and the Grenadines", 
-                                             "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", 
-                                             "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", 
-                                             "Sint Maarten (Dutch part)", "Slovakia", "Slovenia", "Solomon Islands", 
-                                             "Somalia", "South Africa", "South Georgia and the South Sandwich Islands", 
-                                             "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Svalbard and Jan Mayen", 
-                                             "Swaziland", "Sweden", "Switzerland", "Syrian Arab Republic", 
-                                             "Taiwan, Province of China", "Tajikistan", "Tanzania", 
-                                             "Thailand", "Timor-Leste", "Togo", "Tokelau", "Tonga", "Trinidad and Tobago", 
-                                             "Tunisia", "Turkey", "Turkmenistan", "Turks and Caicos Islands", 
-                                             "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom of Great Britain and Northern Ireland", 
-                                             "USA", "United States Minor Outlying Islands", 
-                                             "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela (Bolivarian Republic of)", 
-                                             "Vietnam", "Virgin Islands (British)", "Virgin Islands (U.S.)", 
-                                             "Wallis and Futuna", "Western Sahara", "Yemen", "Zambia", "Zimbabwe"
-), continent = c("Asia", "Europe", "Europe", "Africa", "Oceania", 
-                 "Europe", "Africa", "Americas", NA, "Americas", "Americas", "Asia", 
-                 "Americas", "Oceania", "Europe", "Asia", "Americas", "Asia", 
-                 "Asia", "Americas", "Europe", "Europe", "Americas", "Africa", 
-                 "Americas", "Asia", "Americas", "Americas", "Europe", "Africa", 
-                 NA, "Americas", NA, "Asia", "Europe", "Africa", "Africa", "Asia", 
-                 "Africa", "Americas", "Africa", "Americas", "Africa", "Africa", 
-                 "Americas", "Asia", NA, NA, "Americas", "Africa", "Africa", "Africa", 
-                 "Oceania", "Americas", "Africa", "Europe", "Americas", "Americas", 
-                 "Asia", "Europe", "Europe", "Africa", "Americas", "Americas", 
-                 "Americas", "Africa", "Americas", "Africa", "Africa", "Europe", 
-                 "Africa", "Americas", "Europe", "Oceania", "Europe", "Europe", 
-                 "Americas", "Oceania", NA, "Africa", "Africa", "Asia", "Europe", 
-                 "Africa", "Europe", "Europe", "Americas", "Americas", "Americas", 
-                 "Oceania", "Americas", "Europe", "Africa", "Africa", "Americas", 
-                 "Americas", NA, "Europe", "Americas", "Asia", "Europe", "Europe", 
-                 "Asia", "Asia", "Asia", "Asia", "Europe", "Europe", "Asia", "Europe", 
-                 "Americas", "Asia", "Europe", "Asia", "Asia", "Africa", "Oceania", 
-                 "Asia", "Asia", "Asia", "Asia", "Asia", "Europe", "Asia", "Africa", 
-                 "Africa", "Africa", "Europe", "Europe", "Europe", "Asia", "Europe", 
-                 "Africa", "Africa", "Asia", "Asia", "Africa", "Europe", "Oceania", 
-                 "Americas", "Africa", "Africa", "Africa", "Americas", "Oceania", 
-                 "Europe", "Europe", "Asia", "Europe", "Americas", "Africa", "Africa", 
-                 "Asia", "Africa", "Oceania", "Asia", "Europe", "Oceania", "Oceania", 
-                 "Americas", "Africa", "Africa", "Oceania", "Oceania", "Oceania", 
-                 "Europe", "Asia", "Asia", "Oceania", "Asia", "Americas", "Oceania", 
-                 "Americas", "Americas", "Asia", "Oceania", "Europe", "Europe", 
-                 "Americas", "Asia", "Africa", "Europe", "Europe", "Africa", "Americas", 
-                 "Africa", "Americas", "Americas", "Americas", "Americas", "Americas", 
-                 "Oceania", "Europe", "Africa", "Asia", "Africa", "Europe", "Africa", 
-                 "Africa", "Asia", "Americas", "Europe", "Europe", "Oceania", 
-                 "Africa", "Africa", NA, "Africa", "Europe", "Asia", "Africa", 
-                 "Americas", "Europe", "Africa", "Europe", "Europe", "Asia", "Asia", 
-                 "Asia", "Africa", "Asia", "Asia", "Africa", "Oceania", "Oceania", 
-                 "Americas", "Africa", "Asia", "Asia", "Americas", "Oceania", 
-                 "Africa", "Europe", "Asia", "Europe", "Americas", NA, "Americas", 
-                 "Asia", "Oceania", "Americas", "Asia", "Americas", "Americas", 
-                 "Oceania", "Africa", "Asia", "Africa", "Africa")), row.names = c(NA, 
-                                                                                  -249L), class = c("tbl_df", "tbl", "data.frame"))
-
-
 # Set the file path and name of the .xlsx file -------
 data_path <- "C:/Users/AndreaSanchez/OneDrive - CGIAR/1_chapter_PhD/data_extraction/Meta_data_2023.06.05.xlsx"
 
@@ -142,7 +45,7 @@ data_adoption_clean<- data_adoption%>%
   #Select only the columns that you are going to use
   dplyr::select(id,model_id,main_crop, intervention_recla,intervention_recla_detail_1,
                 intervention_recla_detail_2,intervention_recla_detail_3,
-                y_metric_recla, effect_size_type,x_metric_raw,x_metric_recla, x_metric_unit,
+                y_metric_recla, effect_size_type,x_metric_raw,x_metric_recla, x_metric_unit,x_transformation,
                 model_analysis_raw,model_method,coefficient_type, 
                 coefficient, coefficient_num,
                 variance_metric,variance_value,variance_value_num,
@@ -152,6 +55,10 @@ data_adoption_clean<- data_adoption%>%
 str(data_adoption_clean)
 ### Factors cleaning ----
 sort(unique(data_adoption_clean$x_metric_recla))
+
+articles_count <- data_adoption_clean %>%
+  group_by(x_metric_recla) %>%
+  summarise(n_articles = n_distinct(id))
 
 ####### FARMER CHARACTERISTICS -------
 ##### Socio-demographic ------
@@ -314,10 +221,10 @@ str(h_size)
 write.csv(h_size, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_h_size.csv", row.names=FALSE)
 
 
+
 ##### Economic and financial capital ------
 #"access to credit"
 #"hh off-farm income" AND "hh engaged in off-farm activities"
-
 ## Access to credit ----
 access_credit<- data_adoption_clean%>%
   filter(x_metric_recla== "access to credit")
@@ -409,10 +316,10 @@ table(off_farm_income$factor_metric_unit)
 
 write.csv(off_farm_income, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_off_farm_income.csv", row.names=FALSE)
 
+
 ##### Information/Social capital ------
 #"hh farming experience"
 #"hh association member"
-
 ## Household farming experience ----
 hh_farming_experience<- data_adoption_clean%>%
   filter(x_metric_recla== "hh farming experience")
@@ -509,9 +416,11 @@ str(farm_labour)
 
 write.csv(farm_labour, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_farm_labour.csv", row.names=FALSE)
 
+
 ##### Physical capital ------
 #"secured land tenure"
 #"units of livestock" AND "livestock owned"
+# "h asset"
 
 ## Land tenure security ----
 land_tenure_security<- data_adoption_clean%>%
@@ -653,6 +562,84 @@ str(livestock_ownership)
 table(livestock_ownership$factor_metric_unit)
 
 write.csv(livestock_ownership, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_livestock_ownership.csv", row.names=FALSE)
+
+
+## Household asset ----
+h_asset<- data_adoption_clean%>%
+  filter(x_metric_recla== "h asset")
+
+length(sort(unique(h_asset$id))) # Number of articles 19
+sort(unique(h_asset$x_metric_unit))
+
+#Convert to USD
+"Tsh (1US$ = 1,255 Tsh)"
+h_asset$coefficient_num[h_asset$x_metric_unit %in% "Tsh (1US$ = 1,255 Tsh)"] <- 
+  h_asset$coefficient_num[h_asset$x_metric_unit %in% "Tsh (1US$ = 1,255 Tsh)"] / 1255
+
+h_asset$variance_value_num[h_asset$x_metric_unit %in% "Tsh (1US$ = 1,255 Tsh)"&
+                             h_asset$variance_metric %in% c("standard error", "robust standard error")] <- 
+  h_asset$variance_value_num[h_asset$x_metric_unit %in% "Tsh (1US$ = 1,255 Tsh)"&
+                                           h_asset$variance_metric %in% c("standard error", "robust standard error")] /1255
+
+#"USD (10-3)"
+h_asset$coefficient_num[h_asset$x_metric_unit %in% "USD (10-3)"] <- 
+  h_asset$coefficient_num[h_asset$x_metric_unit %in% "USD (10-3)"] / 1255
+
+h_asset$variance_value_num[h_asset$x_metric_unit %in% "USD (10-3)"&
+                             h_asset$variance_metric %in% c("standard error", "robust standard error")] <- 
+  h_asset$variance_value_num[h_asset$x_metric_unit %in% "USD (10-3)"&
+                               h_asset$variance_metric %in% c("standard error", "robust standard error")] /1255
+
+# Change the  x_metric_unit_recla
+livestock_ownership$x_metric_unit_recla[livestock_ownership$x_metric_recla %in% c("units of livestock", "livestock owned")] <- livestock_ownership$x_metric_unit
+
+# Convert to "TLU"
+livestock_ownership$x_metric_unit_recla[livestock_ownership$x_metric_unit %in% c("TLU (10^-1)", "TLU/ha")] <- "TLU"
+
+# Convert to "number of animals owned"
+"livestock units"
+"number"
+"number of cattle"
+"number of cattle heads per hectare" 
+"number of goats and sheep per hectare"
+"number of livestock owned"                                                    
+"number of other cattle"
+"number of oxen"
+"number of pack animals"
+"number of small rumiants"
+
+livestock_ownership$x_metric_unit_recla[livestock_ownership$x_metric_unit %in% c("livestock units",
+                                                                                 "number",
+                                                                                 "number of cattle",
+                                                                                 "number of cattle heads per hectare", 
+                                                                                 "number of goats and sheep per hectare",
+                                                                                 "number of livestock owned",                                                    
+                                                                                 "number of other cattle",
+                                                                                 "number of oxen",
+                                                                                 "number of pack animals",
+                                                                                 "number of small rumiants")] <- "Units of animal owned"
+
+# Convert to "1= yes, 0= no"
+"1= ownership, 0= otherwise"
+"1=Farmers’ house holds owned draught cattle for crop production, 0= otherwise"
+livestock_ownership$x_metric_unit_recla[livestock_ownership$x_metric_unit %in% c("1= ownership, 0= otherwise",
+                                                                                 "1=Farmers’ house holds owned draught cattle for crop production, 0= otherwise")] <- "1= yes, 0= no"
+
+# Change factor name
+livestock_ownership$factor <- "livestock ownership"
+
+# Factor_metric_unit
+livestock_ownership$factor_metric_unit<- paste(livestock_ownership$factor, " (", livestock_ownership$x_metric_unit_recla, ")", sep="")
+
+sort(unique(livestock_ownership$factor_metric_unit))
+str(livestock_ownership)
+(unique(livestock_ownership$x_metric_raw))
+table(livestock_ownership$factor_metric_unit)
+
+write.csv(livestock_ownership, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_livestock_ownership.csv", row.names=FALSE)
+
+
+
 
 ##### Biophysical ------
 #"farm size"
@@ -907,7 +894,5 @@ write.csv(distance_road, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Ch
 
 
 
-articles_count <- data_adoption_clean %>%
-  group_by(x_metric_recla) %>%
-  summarise(n_articles = n_distinct(id))
+
 
