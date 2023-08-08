@@ -16,11 +16,12 @@ unique(data$limitation, incomparables = FALSE)
 
 #### --- Filter rows for PCC meta-analysis ----
 sort(unique(data$effect_size_type))
-sort(unique(data$limitation_use))
+sort(unique(data$limitation))
 str(data)
 names(data)
 data_PCC<- data%>%
-  filter(effect_size_type=="partial correlation")
+  filter(effect_size_type=="partial correlation")%>%
+  filter(limitation == "interaction effect were included")
 
 #### ---- Filter Adoption papers ----
 sort(unique(data_PCC$y_metric_recla))
@@ -666,11 +667,8 @@ write.csv(h_asset, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_
 slope<- data_adoption_clean%>%
   filter(x_metric_recla== "hh perception of farm slope" |  x_metric_recla=="soil slope")
 
-length(sort(unique(slope$id))) # Number of articles 53
+length(sort(unique(slope$id))) # Number of articles 20
 sort(unique(slope$x_metric_unit))
-
-
-
 
 # Convert to "1= steep slope, 0= otherwise"
 "1= flat, 0= steep slope" 
@@ -693,6 +691,7 @@ slope$x_metric_unit_recla[slope$x_metric_unit %in% c("1= flat, 0= steep slope",
                                                      "1= step, 0= otherwise")] <- "1= steep slope, 0= otherwise"
 
 # Convert to "1= moderate slope, 0= otherwise"
+"1 = moderate, 0 = No"
 "1= moderate slope, 0= otherwise"                                                                                    
 "1= moderate, 0= no"                                                                                                 
 "1= moderate, 0= otherwise"                                                                                          
@@ -729,8 +728,6 @@ table(slope$factor_metric_unit)
 (unique(slope$x_metric_raw))
 
 write.csv(slope, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_farm_slope.csv", row.names=FALSE)
-
-
 
 
 ## Farm size ----
