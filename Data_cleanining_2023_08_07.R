@@ -663,71 +663,7 @@ write.csv(h_asset, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_
 ##### Biophysical ------
 #"farm size"
 #"soil slope" AND "hh perception of farm slope"
-## Farm/Plot slope ----
-slope<- data_adoption_clean%>%
-  filter(x_metric_recla== "hh perception of farm slope" |  x_metric_recla=="soil slope")
-
-length(sort(unique(slope$id))) # Number of articles 20
-sort(unique(slope$x_metric_unit))
-
-# Convert to "1= steep slope, 0= otherwise"
-"1= flat, 0= steep slope" 
-slope$coefficient_num[slope$x_metric_unit %in% "1= flat, 0= steep slope"] <- 
-  slope$coefficient_num[slope$x_metric_unit %in% "1= flat, 0= steep slope"] * -1
-
-# Change the  x_metric_unit_recla
-slope$x_metric_unit_recla <- slope$x_metric_unit
-
-# Convert to "1= steep slope, 0= otherwise"
-"1= flat, 0= steep slope"
-"1= steep slope, 0= no"
-"1= steep slope, 0= otherwise"
-"1= steep, 0= no"
-"1= step, 0= otherwise"
-slope$x_metric_unit_recla[slope$x_metric_unit %in% c("1= flat, 0= steep slope",
-                                                     "1= steep slope, 0= no",
-                                                     "1= steep slope, 0= otherwise",
-                                                     "1= steep, 0= no",
-                                                     "1= step, 0= otherwise")] <- "1= steep slope, 0= otherwise"
-
-# Convert to "1= moderate slope, 0= otherwise"
-"1 = moderate, 0 = No"
-"1= moderate slope, 0= otherwise"                                                                                    
-"1= moderate, 0= no"                                                                                                 
-"1= moderate, 0= otherwise"                                                                                          
-"1= moderately, 0= steep slope"
-
-slope$x_metric_unit_recla[slope$x_metric_unit %in% c("1= moderate slope, 0= otherwise",                                                                                    
-                                                     "1= moderate, 0= no",    
-                                                     "1 = moderate, 0 = No",
-                                                     "1= moderate, 0= otherwise" ,                                                                                         
-                                                     "1= moderately, 0= steep slope")] <- "1= moderate slope, 0= otherwise"
-
-# Convert to "1= medium slope, 0= otherwise"
-"1= medium slope plot, 0= otherwise"                                                                                 
-"1= medium slope, 0= otherwise"                                                                                      
-"1= middle slope, upslope"
-
-slope$x_metric_unit_recla[slope$x_metric_unit %in% c("1= medium slope plot, 0= otherwise",                                                                                 
-                                                     "1= medium slope, 0= otherwise",                                                                                      
-                                                     "1= middle slope, upslope")] <- "1= medium slope, 0= otherwise"
-
-
-slope$x_metric_unit_recla[slope$x_metric_unit %in% c("percent", "percentage")] <- "percentage"
-
-# Change factor name
-slope$factor <- "farm/plot slope"
-
-# Factor_metric_unit
-slope$factor_metric_unit<- paste(slope$factor, " (", slope$x_metric_unit_recla, ")", sep="")
-
-sort(unique(slope$factor_metric_unit))
-str(slope)
-table(slope$factor_metric_unit)
-
-(unique(slope$x_metric_raw))
-
-write.csv(slope, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_farm_slope.csv", row.names=FALSE)
+#"hh perception of soil fertility" AND "soil fertility" AND "soil quality"
 
 
 ## Farm size ----
@@ -801,6 +737,125 @@ str(farm_size)
 write.csv(farm_size, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_farm_size.csv", row.names=FALSE)
 
 
+
+## Soil slope ----
+slope<- data_adoption_clean%>%
+  filter(x_metric_recla== "hh perception of farm slope" |  x_metric_recla=="soil slope")
+
+length(sort(unique(slope$id))) # Number of articles 20
+sort(unique(slope$x_metric_unit))
+
+# Convert to "1= steep slope, 0= otherwise"
+"1= flat, 0= steep slope" 
+slope$coefficient_num[slope$x_metric_unit %in% "1= flat, 0= steep slope"] <- 
+  slope$coefficient_num[slope$x_metric_unit %in% "1= flat, 0= steep slope"] * -1
+
+# Change the  x_metric_unit_recla
+slope$x_metric_unit_recla <- slope$x_metric_unit
+
+# Convert to "1= steep slope, 0= otherwise"
+"1= flat, 0= steep slope"
+"1= steep slope, 0= no"
+"1= steep slope, 0= otherwise"
+"1= steep, 0= no"
+"1= step, 0= otherwise"
+slope$x_metric_unit_recla[slope$x_metric_unit %in% c("1= flat, 0= steep slope",
+                                                     "1= steep slope, 0= no",
+                                                     "1= steep slope, 0= otherwise",
+                                                     "1= steep, 0= no",
+                                                     "1= step, 0= otherwise")] <- "1= steep slope, 0= otherwise"
+
+# Convert to "1= moderate slope, 0= otherwise"
+"1 = moderate, 0 = No"
+"1= moderate slope, 0= otherwise"                                                                                    
+"1= moderate, 0= no"                                                                                                 
+"1= moderate, 0= otherwise"                                                                                          
+"1= moderately, 0= steep slope"
+
+slope$x_metric_unit_recla[slope$x_metric_unit %in% c("1= moderate slope, 0= otherwise",                                                                                    
+                                                     "1= moderate, 0= no",    
+                                                     "1 = moderate, 0 = No",
+                                                     "1= moderate, 0= otherwise" ,                                                                                         
+                                                     "1= moderately, 0= steep slope")] <- "1= moderate slope, 0= otherwise"
+
+# Convert to "1= medium slope, 0= otherwise"
+"1= medium slope plot, 0= otherwise"                                                                                 
+"1= medium slope, 0= otherwise"                                                                                      
+"1= middle slope, upslope"
+
+slope$x_metric_unit_recla[slope$x_metric_unit %in% c("1= medium slope plot, 0= otherwise",                                                                                 
+                                                     "1= medium slope, 0= otherwise",                                                                                      
+                                                     "1= middle slope, upslope")] <- "1= medium slope, 0= otherwise"
+
+
+slope$x_metric_unit_recla[slope$x_metric_unit %in% c("percent", "percentage")] <- "percentage"
+
+# Change factor name
+slope$factor <- "soil slope"
+
+# Factor_metric_unit
+slope$factor_metric_unit<- paste(slope$factor, " (", slope$x_metric_unit_recla, ")", sep="")
+
+sort(unique(slope$factor_metric_unit))
+str(slope)
+table(slope$factor_metric_unit)
+
+(unique(slope$x_metric_raw))
+
+write.csv(slope, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_soil_slope.csv", row.names=FALSE)
+
+## Soil fertility ----
+soil_fertility<- data_adoption_clean%>%
+  filter(x_metric_recla== "hh perception of soil fertility" | x_metric_recla=="soil fertility" | x_metric_recla=="soil quality")
+
+
+(unique(soil_fertility$x_metric_raw))
+length(sort(unique(soil_fertility$id))) # Number of articles 20
+sort(unique(soil_fertility$x_metric_unit))
+
+# Convert to "1= high fertility, 0= otherwise"
+"1= moderate, 0= fertile"
+soil_fertility$coefficient_num[soil_fertility$x_metric_unit %in% c("1= moderate, 0= fertile",
+                                                                   "1= infertile, 0= fertile")] <- 
+  soil_fertility$coefficient_num[soil_fertility$x_metric_unit %in% c("1= moderate, 0= fertile",
+                                                                     "1= infertile, 0= fertile")] * -1
+
+# Change the  x_metric_unit_recla
+soil_fertility$x_metric_unit_recla <- soil_fertility$x_metric_unit
+
+# Convert to "1= high fertility, 0= otherwise"
+"1 = good, 0 = poor"
+"1 = high fertility; 0 otherwise"
+"1 = if Plot has higher quality soil than the average soil condition of the region; 0 = No"
+"1= fertile, 0= poor soil"
+"1= good fertility, 0= otherwise"                                                          
+"1= good quality, 0= otherwise"                                                            
+"1= high, 0= poor"
+"1= infertile, 0= fertile"
+"1= plot has good quality, 0= no"
+soil_fertility$x_metric_unit_recla[soil_fertility$x_metric_unit %in% c("1 = good, 0 = poor",
+                                                                       "1 = high fertility; 0 otherwise",
+                                                                       "1 = if Plot has higher quality soil than the average soil condition of the region; 0 = No",
+                                                                       "1= fertile, 0= poor soil",
+                                                                       "1= good fertility, 0= otherwise"  ,                                                        
+                                                                       "1= good quality, 0= otherwise"  ,                                                          
+                                                                       "1= high, 0= poor",
+                                                                       "1= infertile, 0= fertile",
+                                                                       "1= plot has good quality, 0= no")] <- "1= high fertility, 0= otherwise"
+
+# Change factor name
+soil_fertility$factor <- "soil fertility"
+
+# Factor_metric_unit
+soil_fertility$factor_metric_unit<- paste(soil_fertility$factor, " (", soil_fertility$x_metric_unit_recla, ")", sep="")
+
+sort(unique(soil_fertility$factor_metric_unit))
+str(slope)
+table(soil_fertility$factor_metric_unit)
+
+(unique(soil_fertility$x_metric_raw))
+
+write.csv(soil_fertility, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_soil_fertility.csv", row.names=FALSE)
 
 ####### CONTEXT CHARACTERISTICS -----
 
