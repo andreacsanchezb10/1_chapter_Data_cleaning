@@ -11,9 +11,14 @@ data_path <- "C:/Users/AndreaSanchez/OneDrive - CGIAR/1_chapter_PhD/data_extract
 data <- read_excel(data_path, sheet = "meta_PCC_votecounting")
 data <- data[-1,]
 
+
+unique(data$limitation, incomparables = FALSE)
+
 #### --- Filter rows for PCC meta-analysis ----
 sort(unique(data$effect_size_type))
-
+sort(unique(data$limitation_use))
+str(data)
+names(data)
 data_PCC<- data%>%
   filter(effect_size_type=="partial correlation")
 
@@ -50,7 +55,7 @@ data_adoption_clean<- data_adoption%>%
                 coefficient, coefficient_num,
                 variance_metric,variance_value,variance_value_num,
                 z_t_value,z_t_value_num, p_value, p_value_num, df_original, n_predictors,n_predictors_num,
-                n_samples,n_samples_num, country)
+                n_samples,n_samples_num, country, limitation_of_use)
 
 str(data_adoption_clean)
 ### Factors cleaning ----
@@ -222,6 +227,7 @@ write.csv(h_size, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_P
 
 
 
+
 ##### Economic and financial capital ------
 #"access to credit"
 #"hh off-farm income" AND "hh engaged in off-farm activities"
@@ -318,6 +324,7 @@ write.csv(off_farm_income, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_
 
 
 
+
 ##### Information/Social capital ------
 #"hh farming experience"
 #"hh association member"
@@ -399,6 +406,7 @@ str(agricultural_training)
 table(agricultural_training$factor_metric_unit)
 
 write.csv(agricultural_training, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_agricultural_training.csv", row.names=FALSE)
+
 
 
 ####### FARM CHARACTERISTICS -----
@@ -649,8 +657,82 @@ write.csv(h_asset, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_
 
 
 
+
+
 ##### Biophysical ------
 #"farm size"
+#"soil slope" AND "hh perception of farm slope"
+## Farm/Plot slope ----
+slope<- data_adoption_clean%>%
+  filter(x_metric_recla== "hh perception of farm slope" |  x_metric_recla=="soil slope")
+
+length(sort(unique(slope$id))) # Number of articles 53
+sort(unique(slope$x_metric_unit))
+
+
+
+
+# Convert to "1= steep slope, 0= otherwise"
+"1= flat, 0= steep slope" 
+slope$coefficient_num[slope$x_metric_unit %in% "1= flat, 0= steep slope"] <- 
+  slope$coefficient_num[slope$x_metric_unit %in% "1= flat, 0= steep slope"] * -1
+
+# Change the  x_metric_unit_recla
+slope$x_metric_unit_recla <- slope$x_metric_unit
+
+# Convert to "1= steep slope, 0= otherwise"
+"1= flat, 0= steep slope"
+"1= steep slope, 0= no"
+"1= steep slope, 0= otherwise"
+"1= steep, 0= no"
+"1= step, 0= otherwise"
+slope$x_metric_unit_recla[slope$x_metric_unit %in% c("1= flat, 0= steep slope",
+                                                     "1= steep slope, 0= no",
+                                                     "1= steep slope, 0= otherwise",
+                                                     "1= steep, 0= no",
+                                                     "1= step, 0= otherwise")] <- "1= steep slope, 0= otherwise"
+
+# Convert to "1= moderate slope, 0= otherwise"
+"1= moderate slope, 0= otherwise"                                                                                    
+"1= moderate, 0= no"                                                                                                 
+"1= moderate, 0= otherwise"                                                                                          
+"1= moderately, 0= steep slope"
+
+slope$x_metric_unit_recla[slope$x_metric_unit %in% c("1= moderate slope, 0= otherwise",                                                                                    
+                                                     "1= moderate, 0= no",    
+                                                     "1 = moderate, 0 = No",
+                                                     "1= moderate, 0= otherwise" ,                                                                                         
+                                                     "1= moderately, 0= steep slope")] <- "1= moderate slope, 0= otherwise"
+
+# Convert to "1= medium slope, 0= otherwise"
+"1= medium slope plot, 0= otherwise"                                                                                 
+"1= medium slope, 0= otherwise"                                                                                      
+"1= middle slope, upslope"
+
+slope$x_metric_unit_recla[slope$x_metric_unit %in% c("1= medium slope plot, 0= otherwise",                                                                                 
+                                                     "1= medium slope, 0= otherwise",                                                                                      
+                                                     "1= middle slope, upslope")] <- "1= medium slope, 0= otherwise"
+
+
+slope$x_metric_unit_recla[slope$x_metric_unit %in% c("percent", "percentage")] <- "percentage"
+
+# Change factor name
+slope$factor <- "farm/plot slope"
+
+# Factor_metric_unit
+slope$factor_metric_unit<- paste(slope$factor, " (", slope$x_metric_unit_recla, ")", sep="")
+
+sort(unique(slope$factor_metric_unit))
+str(slope)
+table(slope$factor_metric_unit)
+
+(unique(slope$x_metric_raw))
+
+write.csv(slope, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_farm_slope.csv", row.names=FALSE)
+
+
+
+
 ## Farm size ----
 farm_size<- data_adoption_clean%>%
   filter(x_metric_recla== "farm size")
@@ -668,76 +750,59 @@ sort(unique(farm_size$x_metric_unit))
 table(farm_size$x_metric_unit)
 
 # Convert "acres" to "ha"
-farm_size$coefficient_num[farm_size$x_metric_recla %in% "farm size" &
-                            farm_size$x_metric_unit %in% "acres"] <- 
-  farm_size$coefficient_num[farm_size$x_metric_recla %in% "farm size" &
-                              farm_size$x_metric_unit %in% "acres"] * 0.404686
+farm_size$coefficient_num[farm_size$x_metric_unit %in% "acres"] <- 
+  farm_size$coefficient_num[farm_size$x_metric_unit %in% "acres"] * 0.404686
 
-farm_size$variance_value_num[farm_size$x_metric_recla %in% "farm size" &
-                               farm_size$x_metric_unit %in% "acres"&
+farm_size$variance_value_num[farm_size$x_metric_unit %in% "acres"&
                                farm_size$variance_metric %in% c("standard error", "robust standard error")] <- 
-  farm_size$variance_value_num[farm_size$x_metric_recla %in% "farm size" &
-                                 farm_size$x_metric_unit %in% "acres"&
+  farm_size$variance_value_num[farm_size$x_metric_unit %in% "acres"&
                                  farm_size$variance_metric %in% c("standard error", "robust standard error")] * 0.404686
 
 # Convert "ktha (30 ktha=1ha)" to "ha"
-farm_size$coefficient_num[farm_size$x_metric_recla %in% "farm size" &
-                            farm_size$x_metric_unit %in% "ktha (30 ktha=1ha)"] <- 
-  farm_size$coefficient_num[farm_size$x_metric_recla %in% "farm size" &
-                              farm_size$x_metric_unit %in% "ktha (30 ktha=1ha)"] /30
+farm_size$coefficient_num[farm_size$x_metric_unit %in% "ktha (30 ktha=1ha)"] <- 
+  farm_size$coefficient_num[farm_size$x_metric_unit %in% "ktha (30 ktha=1ha)"] /30
 
-farm_size$variance_value_num[farm_size$x_metric_recla %in% "farm size" &
-                               farm_size$x_metric_unit %in% "ktha (30 ktha=1ha)"&
+farm_size$variance_value_num[farm_size$x_metric_unit %in% "ktha (30 ktha=1ha)"&
                                farm_size$variance_metric %in% c("standard error", "robust standard error")] <- 
-  farm_size$variance_value_num[farm_size$x_metric_recla %in% "farm size" &
-                                 farm_size$x_metric_unit %in% "ktha (30 ktha=1ha)"&
+  farm_size$variance_value_num[farm_size$x_metric_unit %in% "ktha (30 ktha=1ha)"&
                                  farm_size$variance_metric %in% c("standard error", "robust standard error")] /30
 
 # Convert "rai (1 rai = 0.16 ha)" to "ha"
-farm_size$coefficient_num[farm_size$x_metric_recla %in% "farm size" &
-                            farm_size$x_metric_unit %in% "rai (1 rai = 0.16 ha)"] <- 
-  farm_size$coefficient_num[farm_size$x_metric_recla %in% "farm size" &
-                              farm_size$x_metric_unit %in% "rai (1 rai = 0.16 ha)"] *0.16
+farm_size$coefficient_num[farm_size$x_metric_unit %in% "rai (1 rai = 0.16 ha)"] <- 
+  farm_size$coefficient_num[farm_size$x_metric_unit %in% "rai (1 rai = 0.16 ha)"] *0.16
 
-farm_size$variance_value_num[farm_size$x_metric_recla %in% "farm size" &
-                               farm_size$x_metric_unit %in% "rai (1 rai = 0.16 ha)"&
+farm_size$variance_value_num[farm_size$x_metric_unit %in% "rai (1 rai = 0.16 ha)"&
                                farm_size$variance_metric %in% c("standard error", "robust standard error")] <- 
-  farm_size$variance_value_num[farm_size$x_metric_recla %in% "farm size" &
-                                 farm_size$x_metric_unit %in% "rai (1 rai = 0.16 ha)"&
+  farm_size$variance_value_num[farm_size$x_metric_unit %in% "rai (1 rai = 0.16 ha)"&
                                  farm_size$variance_metric %in% c("standard error", "robust standard error")] *0.16
 
 # Convert "Mukhamas (1Mukhamas= 0.73 ha)" to "ha"
-farm_size$coefficient_num[farm_size$x_metric_recla %in% "farm size" &
-                            farm_size$x_metric_unit %in% "Mukhamas (1Mukhamas= 0.73 ha)"] <- 
-  farm_size$coefficient_num[farm_size$x_metric_recla %in% "farm size" &
-                              farm_size$x_metric_unit %in% "Mukhamas (1Mukhamas= 0.73 ha)"] *0.73
+farm_size$coefficient_num[farm_size$x_metric_unit %in% "Mukhamas (1Mukhamas= 0.73 ha)"] <- 
+  farm_size$coefficient_num[farm_size$x_metric_unit %in% "Mukhamas (1Mukhamas= 0.73 ha)"] *0.73
 
-farm_size$variance_value_num[farm_size$x_metric_recla %in% "farm size" &
-                               farm_size$x_metric_unit %in% "Mukhamas (1Mukhamas= 0.73 ha)"&
+farm_size$variance_value_num[farm_size$x_metric_unit %in% "Mukhamas (1Mukhamas= 0.73 ha)"&
                                farm_size$variance_metric %in% c("standard error", "robust standard error")] <- 
-  farm_size$variance_value_num[farm_size$x_metric_recla %in% "hh age" &
-                                 farm_size$x_metric_unit %in% "Mukhamas (1Mukhamas= 0.73 ha)"&
+  farm_size$variance_value_num[farm_size$x_metric_unit %in% "Mukhamas (1Mukhamas= 0.73 ha)"&
                                  farm_size$variance_metric %in% c("standard error", "robust standard error")] *0.73
 
 # Change the  x_metric_unit_recla
-farm_size$x_metric_unit_recla[farm_size$x_metric_recla %in% "farm size"] <- farm_size$x_metric_unit
+farm_size$x_metric_unit_recla <- farm_size$x_metric_unit
 
-farm_size$x_metric_unit_recla[farm_size$x_metric_recla %in% "farm size" & 
-                                farm_size$x_metric_unit %in% c("acres", "ktha (30 ktha=1ha)",
+farm_size$x_metric_unit_recla[farm_size$x_metric_unit %in% c("acres", "ktha (30 ktha=1ha)",
                                                                "rai (1 rai = 0.16 ha)","Mukhamas (1Mukhamas= 0.73 ha)")] <- "ha"
 
 # Change factor name
-farm_size$factor[farm_size$x_metric_recla %in% "farm size"] <- "farm size"
+farm_size$factor <- "farm size"
 
 # Factor_metric_unit
-farm_size$factor_metric_unit[farm_size$x_metric_recla %in% "farm size"] <- 
-  paste(farm_size$factor, " (", farm_size$x_metric_unit_recla, ")", sep="")
+farm_size$factor_metric_unit <- paste(farm_size$factor, " (", farm_size$x_metric_unit_recla, ")", sep="")
 
 sort(unique(farm_size$factor_metric_unit))
 str(farm_size)
 (unique(farm_size$x_metric_raw))
 
 write.csv(farm_size, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_farm_size.csv", row.names=FALSE)
+
 
 
 ####### CONTEXT CHARACTERISTICS -----
