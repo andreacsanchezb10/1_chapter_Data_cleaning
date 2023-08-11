@@ -56,6 +56,8 @@ articles_count <- data_adoption_clean %>%
   group_by(x_metric_recla) %>%
   summarise(n_articles = n_distinct(id))
 
+write.csv(articles_count, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_factors_count.csv", row.names=FALSE)
+
 ####### FARMER CHARACTERISTICS -------
 ##### Socio-demographic ------
 #"hh age"
@@ -348,13 +350,16 @@ write.csv(hh_farming_experience, "C:/Users/andreasanchez/OneDrive - CGIAR/Docume
 hh_association_member<- data_adoption_clean%>%
   filter(x_metric_recla== "hh association member")
 
-length(sort(unique(hh_association_member$id))) # Number of articles 36
+length(sort(unique(hh_association_member$id))) # Number of articles 39
 sort(unique(hh_association_member$x_metric_unit))
 
 table(hh_association_member$x_metric_unit)
 
 # Change the  x_metric_unit_recla
 hh_association_member$x_metric_unit_recla <- hh_association_member$x_metric_unit
+
+hh_association_member$x_metric_unit_recla[hh_association_member$x_metric_unit_recla %in% c("1= yes, 0= otherwise") ] <-"1= yes, 0= no"
+
 
 # Change factor name
 hh_association_member$factor <- "hh association member"
@@ -395,6 +400,9 @@ str(agricultural_training)
 table(agricultural_training$factor_metric_unit)
 
 write.csv(agricultural_training, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_agricultural_training.csv", row.names=FALSE)
+
+
+
 
 
 ####### FARM CHARACTERISTICS -----
@@ -698,7 +706,6 @@ write.csv(h_asset, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_
 #"soil slope" AND "hh perception of farm slope"
 #"hh perception of soil fertility" AND "soil fertility" AND "soil quality"
 
-
 ## Farm size ----
 farm_size<- data_adoption_clean%>%
   filter(x_metric_recla== "farm size")
@@ -803,7 +810,6 @@ str(farm_altitude)
 table(farm_altitude$factor_metric_unit)
 
 write.csv(farm_altitude, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_farm_altitude.csv", row.names=FALSE)
-
 
 ## Soil slope ----
 slope<- data_adoption_clean%>%
@@ -928,8 +934,47 @@ table(soil_fertility$factor_metric_unit)
 
 write.csv(soil_fertility, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_soil_fertility.csv", row.names=FALSE)
 
-####### CONTEXT CHARACTERISTICS -----
+## Soil erosion ----
+soil_erosion<- data_adoption_clean%>%
+  filter(x_metric_recla== "hh perception of soil erosion" | x_metric_recla=="soil erosion")
 
+(unique(soil_erosion$x_metric_raw))
+length(sort(unique(soil_erosion$id))) # Number of articles 9
+sort(unique(soil_erosion$x_metric_unit))
+
+# Change the  x_metric_unit_recla
+soil_erosion$x_metric_unit_recla <- soil_erosion$x_metric_unit
+
+# Convert to "1 = major problem, 2 = minor problem, 3 = not a problem"
+"(1=erosion is a major problem in the village; 2= minor problem, 3= not a problem)"                          
+"1 = erosion is a major problem in the village, 2 = erosion is a minor problem, 3 = erosion is not a problem"
+"1= erosion is a major problem in the village; 2= minor problem, 3= not a problem"                           
+
+soil_erosion$x_metric_unit_recla[soil_erosion$x_metric_unit %in% c("(1=erosion is a major problem in the village; 2= minor problem, 3= not a problem)" ,                         
+                                                                   "1 = erosion is a major problem in the village, 2 = erosion is a minor problem, 3 = erosion is not a problem",
+                                                                   "1= erosion is a major problem in the village; 2= minor problem, 3= not a problem")] <- "1 = major problem, 2 = minor problem, 3 = not a problem"
+
+# Convert to "0 = no, 1 = minimal, 2 = moderate and 3 = high"
+soil_erosion$x_metric_unit_recla[soil_erosion$x_metric_unit %in% c("(0 = no, 1 = minimal, 2 = moderate and 3 = high)" ,                         
+                                                                   "3= severe, 2= moderate, 1= slight, 0= none")] <- "0 = no, 1 = minimal, 2 = moderate and 3 = high"
+
+# Change factor name
+soil_erosion$factor <- "soil erosion"
+
+# Factor_metric_unit
+soil_erosion$factor_metric_unit<- paste(soil_erosion$factor, " (", soil_erosion$x_metric_unit_recla, ")", sep="")
+
+sort(unique(soil_erosion$factor_metric_unit))
+str(soil_erosion)
+table(soil_erosion$factor_metric_unit)
+
+(unique(soil_erosion$x_metric_raw))
+
+write.csv(soil_erosion, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_soil_erosion.csv", row.names=FALSE)
+
+
+
+####### CONTEXT CHARACTERISTICS -----
 ##### Information ------
 #"agricultural extension"
 ## Access to agricultural extension ----
@@ -975,7 +1020,7 @@ write.csv(agricultural_extension, "C:/Users/andreasanchez/OneDrive - CGIAR/Docum
 ##### Physical capital ------
 #"distance to market" AND "distance to input market"
 #"distance to road"
-
+#"distance farm-house"
 ## Distance to market AND Distance to input market ----
 distance_market<- data_adoption_clean%>%
   filter(x_metric_recla== "distance to market" | x_metric_recla=="distance to input market")
@@ -1135,3 +1180,58 @@ str(distance_farm)
 table(distance_farm$factor_metric_unit)
 
 write.csv(distance_farm, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_distance_farm.csv", row.names=FALSE)
+
+
+##### Biophysical ------
+#"precipitation"
+
+## Precipitation ----
+precipitation<- data_adoption_clean%>%
+  filter(x_metric_recla== "precipitation"| x_metric_recla== "precipitation CV")
+
+length(sort(unique(precipitation$id))) # Number of articles 10
+sort(unique(precipitation$x_metric_unit))
+
+table(precipitation$x_metric_unit)
+
+# Convert "meters/year" to "mm"
+precipitation$coefficient_num[precipitation$x_metric_unit %in% "meters/year"] <- 
+  precipitation$coefficient_num[precipitation$x_metric_unit %in% "meters/year"] *1000
+
+precipitation$variance_value_num[precipitation$x_metric_unit %in% "meters/year"&
+                                   precipitation$variance_metric %in% c("standard error", "robust standard error")] <- 
+  precipitation$variance_value_num[precipitation$x_metric_unit %in% "meters/year"&
+                                     precipitation$variance_metric %in% c("standard error", "robust standard error")] *1000
+
+
+# Convert "percentage of coefficient of variation" to "coefficient of variation"
+precipitation$coefficient_num[precipitation$x_metric_unit %in% "percentage of coefficient of variation"] <- 
+  precipitation$coefficient_num[precipitation$x_metric_unit %in% "percentage of coefficient of variation"] /100
+
+precipitation$variance_value_num[precipitation$x_metric_unit %in% "percentage of coefficient of variation"&
+                                   precipitation$variance_metric %in% c("standard error", "robust standard error")] <- 
+  precipitation$variance_value_num[precipitation$x_metric_unit %in% "percentage of coefficient of variation"&
+                                     precipitation$variance_metric %in% c("standard error", "robust standard error")] /100
+
+# Change the  x_metric_unit_recla
+precipitation$x_metric_unit_recla <- precipitation$x_metric_unit
+
+precipitation$x_metric_unit_recla[precipitation$x_metric_unit %in% c("meters/year",
+                                                                     "mm, 16-year MA",                                                                        
+                                                                     "mm/year")] <- "mm"
+
+precipitation$x_metric_unit_recla[precipitation$x_metric_unit %in% c("coefficient of variation",                                                              
+                                                                     "coeficient of variation",
+                                                                     "percentage of coefficient of variation")] <- "coefficient of variation"
+# Change factor name
+precipitation$factor <- "precipitation"
+
+# Factor_metric_unit
+precipitation$factor_metric_unit <- paste(precipitation$factor, " (", precipitation$x_metric_unit_recla, ")", sep="")
+
+sort(unique(precipitation$factor_metric_unit))
+str(precipitation)
+(unique(precipitation$x_metric_raw))
+table(precipitation$factor_metric_unit)
+
+write.csv(precipitation, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_precipitation.csv", row.names=FALSE)
