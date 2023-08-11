@@ -26,7 +26,7 @@ data_adoption<- data%>%
 length(sort(unique(data_adoption$id))) # Number of articles 91
 table(data_adoption$y_metric_recla)
 sort(unique(data_adoption$y_metric_recla_2))
-
+names(data_adoption)
 ### Pre-processing ----
 data_adoption_clean<- data_adoption%>%
   #Convert to numeric the necessary columns
@@ -41,6 +41,7 @@ data_adoption_clean<- data_adoption%>%
   #Select only the columns that you are going to use
   dplyr::select(id,model_id,main_crop, intervention_recla,intervention_recla_detail_1,
                 intervention_recla_detail_2,intervention_recla_detail_3,
+                factor, factor_class, factor_sub_class,
                 y_metric_recla, effect_size_type,x_metric_raw,x_metric_recla, x_metric_unit,x_data_type,x_transformation,
                 model_analysis_raw,model_method,coefficient_type, 
                 coefficient, coefficient_num,
@@ -53,7 +54,7 @@ str(data_adoption_clean)
 sort(unique(data_adoption_clean$x_metric_recla))
 
 articles_count <- data_adoption_clean %>%
-  group_by(x_metric_recla) %>%
+  group_by(factor,x_metric_recla) %>%
   summarise(n_articles = n_distinct(id))
 
 write.csv(articles_count, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_factors_count.csv", row.names=FALSE)
@@ -79,6 +80,7 @@ sort(unique(hh_age$x_metric_unit))
 
 table(hh_age$x_metric_unit)
 sort(unique(hh_age$x_data_type))
+sort(unique(hh_age$factor))
 
 #Change to "years"
 "hh age (years * (10^-2))"
@@ -95,9 +97,6 @@ hh_age$x_metric_unit_recla <- hh_age$x_metric_unit
 
 hh_age$x_metric_unit_recla[hh_age$x_metric_unit %in% c("years * (10^-2)")] <- "years"
   
-# Change factor name
-hh_age$factor <- "hh age"
-
 # Factor_metric_unit
 hh_age$factor_metric_unit <- paste(hh_age$factor, " (", hh_age$x_metric_unit_recla, ")", sep="")
 
@@ -114,6 +113,7 @@ hh_gender<- data_adoption_clean%>%
 length(sort(unique(hh_gender$id))) # Number of articles 54
 sort(unique(hh_gender$x_metric_unit))
 sort(unique(hh_gender$x_data_type))
+sort(unique(hh_gender$factor))
 
 #"1= female, 0= male" "1= male, 0= female" "1= male, 2= female" "nd" 
 table(hh_gender$x_metric_unit)
@@ -125,9 +125,6 @@ hh_gender$coefficient_num[hh_gender$x_metric_unit %in% c("1= female, 0= male", "
 # Convert "1= female, 0= male" and "1= male, 2= female" to "1= male, 0= female"
 hh_gender$x_metric_unit_recla <- hh_gender$x_metric_unit
 hh_gender$x_metric_unit_recla[hh_gender$x_metric_unit %in% c("1= male, 0= female","1= female, 0= male", "1= male, 2= female")] <- "1= male, 0= female"
-
-# Change factor name
-hh_gender$factor <- "hh gender"
 
 # Factor_metric_unit
 hh_gender$factor_metric_unit <- paste(hh_gender$factor, " (", hh_gender$x_metric_unit_recla, ")", sep="")
@@ -142,17 +139,16 @@ write.csv(hh_gender, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapte
 hh_education<- data_adoption_clean%>%
   filter(x_metric_recla== "hh education")
 
-length(sort(unique(hh_education$id))) # Number of articles 73
+length(sort(unique(hh_education$id))) # Number of articles 74
 sort(unique(hh_education$x_metric_unit))
 sort(unique(hh_education$x_data_type))
+sort(unique(hh_education$factor))
 
 table(hh_education$x_metric_unit)
 
 # Change the  x_metric_unit_recla
 hh_education$x_metric_unit_recla <- hh_education$x_metric_unit
 
-# Change factor name
-hh_education$factor <- "hh education"
 
 # Factor_metric_unit
 hh_education$factor_metric_unit <- paste(hh_education$factor, " (", hh_education$x_metric_unit_recla, ")", sep="")
@@ -170,8 +166,10 @@ write.csv(hh_education, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Cha
 hh_native<- data_adoption_clean%>%
   filter(x_metric_recla== "hh is native")
 
+sort(unique(hh_native$factor))
 length(sort(unique(hh_native$id))) # Number of articles 10
 sort(unique(hh_native$x_metric_unit))
+
 #[1] "1= hh from Southern Brazil, 0= otherwise" "1= native, 0= settler"                    "1= outsider, 0= native"                  
 #[4] "1= yes, 0= no"  
 table(hh_native$x_metric_unit)
@@ -186,9 +184,6 @@ hh_native$x_metric_unit_recla <- hh_native$x_metric_unit
 hh_native$x_metric_unit_recla[hh_native$x_metric_unit_recla %in% c("1= outsider, 0= native",
                                                                    "1= native, 0= settler",
                                                                    "1= yes, 0= no")] <- "1= native, 0= otherwise"
-# Change factor name
-hh_native$factor <- "h is native"
-
 # Factor_metric_unit
 hh_native$factor_metric_unit <- paste(hh_native$factor, " (", hh_native$x_metric_unit_recla, ")", sep="")
 
@@ -204,6 +199,7 @@ h_size<- data_adoption_clean%>%
   filter(x_metric_recla== "h size")
 
 length(sort(unique(h_size$id))) # Number of articles 41
+sort(unique(h_size$factor))
 sort(unique(h_size$x_metric_unit))
 #[1] "1= <4 members, 2= 5–8 member, 3= 9–12 member, 4= above 12 member" "1= 8-15 members, 0= <8 members"                                  
 #[3] "1= more than 15 members, 0= <8 members"                           "number of people" 
@@ -211,9 +207,6 @@ table(h_size$x_metric_unit)
 
 # Change the  x_metric_unit_recla
 h_size$x_metric_unit_recla <- h_size$x_metric_unit
-
-# Change factor name
-h_size$factor <- "h size"
 
 # Factor_metric_unit
 h_size$factor_metric_unit <- paste(h_size$factor, " (", h_size$x_metric_unit_recla, ")", sep="")
@@ -235,14 +228,12 @@ access_credit<- data_adoption_clean%>%
 
 length(sort(unique(access_credit$id))) # Number of articles 28
 sort(unique(access_credit$x_metric_unit))
+sort(unique(access_credit$factor))
 
 # Change the  x_metric_unit_recla
 access_credit$x_metric_unit_recla <- access_credit$x_metric_unit
 
 access_credit$x_metric_unit_recla[access_credit$x_metric_unit_recla %in% c("1= yes, 0= otherwise")] <- "1= yes, 0= no"
-
-# Change factor name
-access_credit$factor <- "access to credit"
 
 # Factor_metric_unit
 access_credit$factor_metric_unit <- paste(access_credit$factor, " (", access_credit$x_metric_unit_recla, ")", sep="")
@@ -263,6 +254,7 @@ off_farm_income<- data_adoption_clean%>%
 
 length(sort(unique(off_farm_income$id))) # Number of articles 41
 sort(unique(off_farm_income$x_metric_unit))
+sort(unique(off_farm_income$factor))
 
 
 # Multiply "off-farm income (1= if full-time farmer; 0= otherwise)" * -1 to convert to "1= off-farm income, 0= full-time farmer"
@@ -305,8 +297,6 @@ off_farm_income$x_metric_unit_recla[off_farm_income$x_metric_unit %in% c("naira"
                                                                          "Naira (₦)",
                                                                          "SDG/man-day",                                                                                                     
                                                                          "USS per month/household")] <- "country currency"
-# Change factor name
-off_farm_income$factor <- "off-farm income"
 
 # Factor_metric_unit
 off_farm_income$factor_metric_unit <- paste(off_farm_income$factor, " (", off_farm_income$x_metric_unit_recla, ")", sep="")
@@ -329,15 +319,13 @@ hh_farming_experience<- data_adoption_clean%>%
 
 length(sort(unique(hh_farming_experience$id))) # Number of articles 20
 sort(unique(hh_farming_experience$x_metric_unit))
+sort(unique(hh_farming_experience$factor))
 
 #[1] "(years)^2"                                        "1= <15 years of farming experience, 0= otherwise" "years"  
 table(hh_farming_experience$x_metric_unit)
 
 # Change the  x_metric_unit_recla
 hh_farming_experience$x_metric_unit_recla <- hh_farming_experience$x_metric_unit
-
-# Change factor name
-hh_farming_experience$factor <- "hh farming experience"
 
 # Factor_metric_unit
 hh_farming_experience$factor_metric_unit <- paste(hh_farming_experience$factor, " (", hh_farming_experience$x_metric_unit_recla, ")", sep="")
@@ -362,10 +350,6 @@ hh_association_member$x_metric_unit_recla <- hh_association_member$x_metric_unit
 
 hh_association_member$x_metric_unit_recla[hh_association_member$x_metric_unit_recla %in% c("1= yes, 0= otherwise") ] <-"1= yes, 0= no"
 
-
-# Change factor name
-hh_association_member$factor <- "hh association member"
-
 # Factor_metric_unit
 hh_association_member$factor_metric_unit <- paste(hh_association_member$factor, " (", hh_association_member$x_metric_unit_recla, ")", sep="")
 
@@ -389,9 +373,6 @@ agricultural_training$x_metric_unit_recla <- agricultural_training$x_metric_unit
 #Convert to "1= yes, 0= no"
 "1= yes, 0= otherwise"
 agricultural_training$x_metric_unit_recla[agricultural_training$x_metric_unit %in% c("1= yes, 0= otherwise" )] <- "1= yes, 0= no"
-
-# Change factor name
-agricultural_training$factor <- "access to agricultural training"
 
 # Factor_metric_unit
 agricultural_training$factor_metric_unit<- paste(agricultural_training$factor, " (", agricultural_training$x_metric_unit_recla, ")", sep="")
@@ -441,9 +422,6 @@ farm_labour$x_metric_unit_recla[farm_labour$x_metric_unit %in% c("Adult equivale
                                                                  "number of people" ,                                                                                                             
                                                                  "Number of women in agriculture",                                                                                                
                                                                  "person/rai3 (1 rai=0.16 ha)")] <- "number of people"
-
-# Change factor name
-farm_labour$factor <- "farm labour force"
 
 # Factor_metric_unit
 farm_labour$factor_metric_unit <- paste(farm_labour$factor, " (", farm_labour$x_metric_unit_recla, ")", sep="")
@@ -521,9 +499,6 @@ land_tenure_security$x_metric_unit_recla[land_tenure_security$x_metric_unit %in%
                                                                                    "proportion" ,                                                                                                   
                                                                                    "proportion of cultivated area with secure tenure")] <- "percentage to secure land"
 
-# Change factor name
-land_tenure_security$factor <- "secured land tenure"
-
 # Factor_metric_unit
 land_tenure_security$factor_metric_unit <- paste(land_tenure_security$factor, " (", land_tenure_security$x_metric_unit_recla, ")", sep="")
 
@@ -583,9 +558,6 @@ livestock_ownership$x_metric_unit_recla[livestock_ownership$x_metric_unit %in% c
 "1=Farmers’ house holds owned draught cattle for crop production, 0= otherwise"
 livestock_ownership$x_metric_unit_recla[livestock_ownership$x_metric_unit %in% c("1= ownership, 0= otherwise",
                                                                                  "1=Farmers’ house holds owned draught cattle for crop production, 0= otherwise")] <- "1= yes, 0= no"
-
-# Change factor name
-livestock_ownership$factor <- "livestock ownership"
 
 # Factor_metric_unit
 livestock_ownership$factor_metric_unit<- paste(livestock_ownership$factor, " (", livestock_ownership$x_metric_unit_recla, ")", sep="")
@@ -687,9 +659,6 @@ h_asset$x_metric_unit_recla[h_asset$factor_metric_unit %in% c("h asset (hh Asset
 h_asset$x_metric_unit_recla[h_asset$factor_metric_unit %in% c("h asset (Number of different farming tools farmer has)",
                                                               "h asset (number of tools)")] <- "number of tools"
 
-# Change factor name
-h_asset$factor <- "h asset"
-
 # Factor_metric_unit
 h_asset$factor_metric_unit<- paste(h_asset$factor, " (", h_asset$x_metric_unit_recla, ")", sep="")
 
@@ -712,6 +681,7 @@ farm_size<- data_adoption_clean%>%
   filter(x_metric_recla== "farm size")
 
 length(sort(unique(farm_size$id))) # Number of articles 59
+sort(unique(farm_size$factor))
 sort(unique(farm_size$x_metric_unit))
 [1] "(ha)^2"                                                             "1= <2 ha; 2= 2–3.5 ha; 3= 3.5–5 ha; 4= more than 5 ha"             
 [3] "1= <250” acres, 2= 250–749 acres, 3= 750–1449 acres, 4: 1500 acres" "1= >0.50 ha; 0= < 0.50 ha"                                         
@@ -770,9 +740,6 @@ farm_size$x_metric_unit_recla[farm_size$x_metric_unit %in% c("acres",
                                                                "rai (1 rai = 0.16 ha)",
                                                              "Mukhamas (1Mukhamas= 0.73 ha)")] <- "ha"
 
-# Change factor name
-farm_size$factor <- "farm size"
-
 # Factor_metric_unit
 farm_size$factor_metric_unit <- paste(farm_size$factor, " (", farm_size$x_metric_unit_recla, ")", sep="")
 
@@ -789,6 +756,7 @@ farm_altitude<- data_adoption_clean%>%
 
 (unique(farm_altitude$x_metric_raw))
 length(sort(unique(farm_altitude$id))) # Number of articles 9
+sort(unique(farm_altitude$factor))
 sort(unique(farm_altitude$x_metric_unit))
 table(farm_altitude$x_metric_unit)
 
@@ -798,9 +766,6 @@ farm_altitude$x_metric_unit_recla <- farm_altitude$x_metric_unit
 farm_altitude$x_metric_unit_recla[farm_altitude$x_metric_unit %in% c("log(m.a.s.l.)",
                                                                      "m.a.s.l",
                                                                      "m.a.s.l.")] <- "m.a.s.l."
-
-# Change factor name
-farm_altitude$factor <- "farm altitude"
 
 # Factor_metric_unit
 farm_altitude$factor_metric_unit <- paste(farm_altitude$factor, " (", farm_altitude$x_metric_unit_recla, ")", sep="")
@@ -818,6 +783,7 @@ slope<- data_adoption_clean%>%
 
 length(sort(unique(slope$id))) # Number of articles 24
 sort(unique(slope$x_metric_unit))
+sort(unique(slope$factor))
 
 # Convert to "1= steep slope, 0= otherwise"
 "1= flat, 0= steep slope" 
@@ -866,9 +832,6 @@ slope$x_metric_unit_recla[slope$x_metric_unit %in% c("percent",
                                                      "percentage",
                                                      "proportion")] <- "percentage"
 
-# Change factor name
-slope$factor <- "soil slope"
-
 # Factor_metric_unit
 slope$factor_metric_unit<- paste(slope$factor, " (", slope$x_metric_unit_recla, ")", sep="")
 
@@ -888,6 +851,7 @@ soil_fertility<- data_adoption_clean%>%
 (unique(soil_fertility$x_metric_raw))
 length(sort(unique(soil_fertility$id))) # Number of articles 21
 sort(unique(soil_fertility$x_metric_unit))
+sort(unique(soil_fertility$factor))
 
 # Convert to "1= high fertility, 0= otherwise"
 "1= moderate, 0= fertile"
@@ -921,8 +885,6 @@ soil_fertility$x_metric_unit_recla[soil_fertility$x_metric_unit %in% c("1= good,
                                                                        "1= infertile, 0= fertile",
                                                                        "1= plot has good quality, 0= no")] <- "1= high fertility, 0= otherwise"
 
-# Change factor name
-soil_fertility$factor <- "soil fertility"
 
 # Factor_metric_unit
 soil_fertility$factor_metric_unit<- paste(soil_fertility$factor, " (", soil_fertility$x_metric_unit_recla, ")", sep="")
@@ -942,6 +904,7 @@ soil_erosion<- data_adoption_clean%>%
 (unique(soil_erosion$x_metric_raw))
 length(sort(unique(soil_erosion$id))) # Number of articles 9
 sort(unique(soil_erosion$x_metric_unit))
+sort(unique(soil_erosion$factor))
 
 # Change the  x_metric_unit_recla
 soil_erosion$x_metric_unit_recla <- soil_erosion$x_metric_unit
@@ -958,9 +921,6 @@ soil_erosion$x_metric_unit_recla[soil_erosion$x_metric_unit %in% c("(1=erosion i
 # Convert to "0 = no, 1 = minimal, 2 = moderate and 3 = high"
 soil_erosion$x_metric_unit_recla[soil_erosion$x_metric_unit %in% c("(0 = no, 1 = minimal, 2 = moderate and 3 = high)" ,                         
                                                                    "3= severe, 2= moderate, 1= slight, 0= none")] <- "0 = no, 1 = minimal, 2 = moderate and 3 = high"
-
-# Change factor name
-soil_erosion$factor <- "soil erosion"
 
 # Factor_metric_unit
 soil_erosion$factor_metric_unit<- paste(soil_erosion$factor, " (", soil_erosion$x_metric_unit_recla, ")", sep="")
@@ -983,6 +943,7 @@ irrigation<- data_adoption_clean%>%
 
 length(sort(unique(irrigation$id))) # Number of articles 11
 sort(unique(irrigation$x_metric_unit))
+sort(unique(irrigation$factor))
 table(irrigation$x_metric_unit)
 
 # Change the  x_metric_unit_recla
@@ -996,10 +957,6 @@ irrigation$x_metric_unit_recla[irrigation$x_metric_unit %in% c("1= if the farmer
 irrigation$x_metric_unit_recla[irrigation$x_metric_unit %in% c("Percent farm acres irrigated",
                                                                "percentage",
                                                                "percentage of land under irrigation")] <- "percentage of land under irrigation"
-
-
-# Change factor name
-irrigation$factor <- "farm size"
 
 # Factor_metric_unit
 irrigation$factor_metric_unit <- paste(irrigation$factor, " (", irrigation$x_metric_unit_recla, ")", sep="")
@@ -1025,6 +982,8 @@ agricultural_extension <- data_adoption_clean%>%
 
 length(sort(unique(agricultural_extension$id))) # Number of articles 45
 sort(unique(agricultural_extension$x_metric_unit))
+sort(unique(agricultural_extension$factor))
+
 table(agricultural_extension$x_metric_unit)
 
 
@@ -1046,9 +1005,6 @@ agricultural_extension$x_metric_unit_recla[agricultural_extension$x_metric_unit 
 agricultural_extension$x_metric_unit_recla[agricultural_extension$x_metric_unit %in% c("1= yes, 0= no",                                                                                                                                                   
                                                                                        "1= yes, 0= otherwise")] <- "1= yes, 0= no"
 
-# Change factor name
-agricultural_extension$factor <- "agricultural extension"
-
 # Factor_metric_unit
 agricultural_extension$factor_metric_unit <-  paste(agricultural_extension$factor, " (", agricultural_extension$x_metric_unit_recla, ")", sep="")
 
@@ -1068,6 +1024,7 @@ distance_market<- data_adoption_clean%>%
   filter(x_metric_recla== "distance to market" | x_metric_recla=="distance to input market")
 
 length(sort(unique(distance_market$id))) # Number of articles 21
+sort(unique(distance_market$factor))
 sort(unique(distance_market$x_metric_unit))
 #[1] "1= 1 to 3 km, 0= less than 1 km"                                                                 
 #[2] "1= Farmers’ house holds that could reach market center within 13 km (about 8 miles), 0=otherwise"
@@ -1101,9 +1058,6 @@ distance_market$x_metric_unit_recla<- distance_market$x_metric_unit
 distance_market$x_metric_unit_recla[distance_market$x_metric_unit %in% c("miles")] <- "km"
 distance_market$x_metric_unit_recla[distance_market$x_metric_unit %in% c("minutes (10^-2)")] <- "minutes"
 
-# Change factor name
-distance_market$factor <- "distance to market"
-
 # Factor_metric_unit
 distance_market$factor_metric_unit <- paste(distance_market$factor, " (", distance_market$x_metric_unit_recla, ")", sep="")
 
@@ -1119,6 +1073,8 @@ distance_road<- data_adoption_clean%>%
   filter(x_metric_recla== "distance to road")
 
 length(sort(unique(distance_road$id))) # Number of articles 11
+sort(unique(distance_road$factor))
+
 sort(unique(distance_road$x_metric_unit))
 #[1] "1= if access to motor road is > 1 kilometer distance, 0= otherwise" "hour"                                                              
 #[3] "km"                                                                 "metres"                                                            
@@ -1162,9 +1118,6 @@ distance_road$variance_value_num[distance_road$x_metric_unit %in% "hour"&
 # Change the  x_metric_unit_recla
 distance_road$x_metric_unit_recla[distance_road$x_metric_unit %in% c("hour")] <- "minutes"
 
-# Change factor name
-distance_road$factor <- "distance to road"
-
 # Factor_metric_unit
 distance_road$factor_metric_unit <- paste(distance_road$factor, " (", distance_road$x_metric_unit_recla, ")", sep="")
 
@@ -1181,6 +1134,7 @@ distance_farm<- data_adoption_clean%>%
 
 length(sort(unique(distance_farm$id))) # Number of articles 14
 sort(unique(distance_farm$x_metric_unit))
+sort(unique(distance_farm$factor))
 #[1] "hours"   "km"      "miles"   "minutes"
 
 table(distance_farm$x_metric_unit)
@@ -1209,9 +1163,6 @@ distance_farm$variance_value_num[distance_farm$x_metric_unit %in% "hour"&
 
 # Change the  x_metric_unit_recla
 distance_farm$x_metric_unit_recla[distance_farm$x_metric_unit %in% c("hours")] <- "minutes"
-
-# Change factor name
-distance_farm$factor <- "distance farm-house"
 
 # Factor_metric_unit
 distance_farm$factor_metric_unit <- paste(distance_farm$factor, " (", distance_farm$x_metric_unit_recla, ")", sep="")
@@ -1265,8 +1216,7 @@ precipitation$x_metric_unit_recla[precipitation$x_metric_unit %in% c("meters/yea
 precipitation$x_metric_unit_recla[precipitation$x_metric_unit %in% c("coefficient of variation",                                                              
                                                                      "coeficient of variation",
                                                                      "percentage of coefficient of variation")] <- "coefficient of variation"
-# Change factor name
-precipitation$factor <- "precipitation"
+
 
 # Factor_metric_unit
 precipitation$factor_metric_unit <- paste(precipitation$factor, " (", precipitation$x_metric_unit_recla, ")", sep="")
