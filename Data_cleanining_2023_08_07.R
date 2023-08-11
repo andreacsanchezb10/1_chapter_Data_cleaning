@@ -225,6 +225,7 @@ str(h_size)
 write.csv(h_size, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_h_size.csv", row.names=FALSE)
 
 
+
 ##### Economic and financial capital ------
 #"access to credit"
 #"hh off-farm income" AND "hh engaged in off-farm activities"
@@ -316,6 +317,7 @@ str(off_farm_income)
 table(off_farm_income$factor_metric_unit)
 
 write.csv(off_farm_income, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_off_farm_income.csv", row.names=FALSE)
+
 
 ##### Information/Social capital ------
 #"hh farming experience"
@@ -453,15 +455,16 @@ str(farm_labour)
 write.csv(farm_labour, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_farm_labour.csv", row.names=FALSE)
 
 
+
 ##### Physical capital ------
 #"secured land tenure"
 #"units of livestock" AND "livestock owned"
 # "h asset"
 ## Land tenure security ----
 land_tenure_security<- data_adoption_clean%>%
-  filter(x_metric_recla== "secured land tenure")
+  filter(x_metric_recla== "land tenure security")
 
-length(sort(unique(land_tenure_security$id))) # Number of articles 35
+length(sort(unique(land_tenure_security$id))) # Number of articles 36
 sort(unique(land_tenure_security$x_metric_unit))
 table(land_tenure_security$x_metric_unit)
 
@@ -474,7 +477,7 @@ land_tenure_security$coefficient_num[land_tenure_security$x_metric_unit %in% c("
   land_tenure_security$coefficient_num[land_tenure_security$x_metric_unit %in% c("1 = family farm, 0 = own farm",
                                                                                  "1 = share croppers, 0 = own farm")] * -1
 
-land_tenure_security$x_metric_unit_recla[land_tenure_security$x_metric_recla %in% "secured land tenure"] <- land_tenure_security$x_metric_unit
+land_tenure_security$x_metric_unit_recla <- land_tenure_security$x_metric_unit
 land_tenure_security$x_metric_unit_recla[land_tenure_security$x_metric_unit %in% c("1 = family farm, 0 = own farm",
                                                                                    "1 = share croppers, 0 = own farm")] <- "1= secure, 0= otherwise"
 # Convert to "1= secure land tenure, 0= otherwise"
@@ -524,9 +527,6 @@ land_tenure_security$factor <- "secured land tenure"
 # Factor_metric_unit
 land_tenure_security$factor_metric_unit <- paste(land_tenure_security$factor, " (", land_tenure_security$x_metric_unit_recla, ")", sep="")
 
-#NOTES land tenure security
-# 607 excluded: Not clear which is most secure tenure system
-# 750 excluded: Not clear which is most secure tenure system
 sort(unique(land_tenure_security$factor_metric_unit))
 str(land_tenure_security)
 (unique(land_tenure_security$x_metric_raw))
@@ -699,6 +699,7 @@ str(h_asset)
 table(h_asset$factor_metric_unit)
 
 write.csv(h_asset, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_h_asset.csv", row.names=FALSE)
+
 
 ##### Biophysical ------
 #"farm size"
@@ -974,6 +975,47 @@ write.csv(soil_erosion, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Cha
 
 
 
+##### Management ------
+#"use of irrigation" AND "access to irrigation"
+## Irrigation ----
+irrigation<- data_adoption_clean%>%
+  filter(x_metric_recla== "use of irrigation"| x_metric_recla== "access to irrigation")
+
+length(sort(unique(irrigation$id))) # Number of articles 11
+sort(unique(irrigation$x_metric_unit))
+table(irrigation$x_metric_unit)
+
+# Change the  x_metric_unit_recla
+irrigation$x_metric_unit_recla <- irrigation$x_metric_unit
+
+irrigation$x_metric_unit_recla[irrigation$x_metric_unit %in% c("1= if the farmer has one or more water wells in the garden, 0= otherwise",
+                                                             "1= irrigated plot, 0= rainfed plot" ,
+                                                             "1= yes, 0= no",
+                                                             "1= yes, 0= otherwise")] <- "1= yes, 0= no"
+
+irrigation$x_metric_unit_recla[irrigation$x_metric_unit %in% c("Percent farm acres irrigated",
+                                                               "percentage",
+                                                               "percentage of land under irrigation")] <- "percentage of land under irrigation"
+
+
+# Change factor name
+irrigation$factor <- "farm size"
+
+# Factor_metric_unit
+irrigation$factor_metric_unit <- paste(irrigation$factor, " (", irrigation$x_metric_unit_recla, ")", sep="")
+
+sort(unique(irrigation$factor_metric_unit))
+str(irrigation)
+(unique(irrigation$x_metric_raw))
+table(irrigation$factor_metric_unit)
+
+
+write.csv(irrigation, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_irrigation.csv", row.names=FALSE)
+
+
+
+
+
 ####### CONTEXT CHARACTERISTICS -----
 ##### Information ------
 #"agricultural extension"
@@ -1235,3 +1277,4 @@ str(precipitation)
 table(precipitation$factor_metric_unit)
 
 write.csv(precipitation, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_precipitation.csv", row.names=FALSE)
+
