@@ -62,6 +62,7 @@ articles_count <- data_adoption_clean %>%
 #"hh gender"
 #"hh education"
 #"h size"
+#"hh is native"
 
 ## Household head Age ----
 hh_age<- data_adoption_clean%>%
@@ -162,6 +163,40 @@ str(hh_education)
 (unique(hh_education$x_metric_raw))
 
 write.csv(hh_education, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_hh_education.csv", row.names=FALSE)
+
+## Household head is native ----
+hh_native<- data_adoption_clean%>%
+  filter(x_metric_recla== "hh is native")
+
+length(sort(unique(hh_native$id))) # Number of articles 10
+sort(unique(hh_native$x_metric_unit))
+#[1] "1= hh from Southern Brazil, 0= otherwise" "1= native, 0= settler"                    "1= outsider, 0= native"                  
+#[4] "1= yes, 0= no"  
+table(hh_native$x_metric_unit)
+
+# Multiply "1= outsider, 0= native" * -1 to convert to "1= native, 0= otherwise"
+hh_native$coefficient_num[hh_native$x_metric_unit %in% c("1= outsider, 0= native")] <- 
+  hh_native$coefficient_num[hh_native$x_metric_unit %in% c("1= outsider, 0= native")] * -1
+
+
+# Change the  x_metric_unit_recla
+hh_native$x_metric_unit_recla <- hh_native$x_metric_unit
+hh_native$x_metric_unit_recla[hh_native$x_metric_unit_recla %in% c("1= outsider, 0= native",
+                                                                   "1= native, 0= settler",
+                                                                   "1= yes, 0= no")] <- "1= native, 0= otherwise"
+
+# Change factor name
+hh_native$factor <- "h size"
+
+# Factor_metric_unit
+hh_native$factor_metric_unit <- paste(hh_native$factor, " (", hh_native$x_metric_unit_recla, ")", sep="")
+
+sort(unique(hh_native$factor_metric_unit))
+str(hh_native)
+(unique(hh_native$x_metric_raw))
+table(hh_native$factor_metric_unit)
+
+write.csv(hh_native, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_hh_native.csv", row.names=FALSE)
 
 ## Household size ----
 h_size<- data_adoption_clean%>%
