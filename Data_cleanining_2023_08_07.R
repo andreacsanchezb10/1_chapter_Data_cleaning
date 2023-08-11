@@ -184,9 +184,8 @@ hh_native$x_metric_unit_recla <- hh_native$x_metric_unit
 hh_native$x_metric_unit_recla[hh_native$x_metric_unit_recla %in% c("1= outsider, 0= native",
                                                                    "1= native, 0= settler",
                                                                    "1= yes, 0= no")] <- "1= native, 0= otherwise"
-
 # Change factor name
-hh_native$factor <- "h size"
+hh_native$factor <- "h is native"
 
 # Factor_metric_unit
 hh_native$factor_metric_unit <- paste(hh_native$factor, " (", hh_native$x_metric_unit_recla, ")", sep="")
@@ -695,6 +694,7 @@ write.csv(h_asset, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_
 
 ##### Biophysical ------
 #"farm size"
+#"farm altitude"
 #"soil slope" AND "hh perception of farm slope"
 #"hh perception of soil fertility" AND "soil fertility" AND "soil quality"
 
@@ -775,11 +775,41 @@ str(farm_size)
 write.csv(farm_size, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_farm_size.csv", row.names=FALSE)
 
 
+## Farm altitude ----
+farm_altitude<- data_adoption_clean%>%
+  filter(x_metric_recla== "farm altitude")
+
+(unique(farm_altitude$x_metric_raw))
+length(sort(unique(farm_altitude$id))) # Number of articles 9
+sort(unique(farm_altitude$x_metric_unit))
+table(farm_altitude$x_metric_unit)
+
+# Change the  x_metric_unit_recla
+farm_altitude$x_metric_unit_recla <- farm_altitude$x_metric_unit
+
+farm_altitude$x_metric_unit_recla[farm_altitude$x_metric_unit %in% c("log(m.a.s.l.)",
+                                                                     "m.a.s.l",
+                                                                     "m.a.s.l.")] <- "m.a.s.l."
+
+# Change factor name
+farm_altitude$factor <- "farm altitude"
+
+# Factor_metric_unit
+farm_altitude$factor_metric_unit <- paste(farm_altitude$factor, " (", farm_altitude$x_metric_unit_recla, ")", sep="")
+
+sort(unique(farm_altitude$factor_metric_unit))
+str(farm_altitude)
+(unique(farm_altitude$x_metric_raw))
+table(farm_altitude$factor_metric_unit)
+
+write.csv(farm_altitude, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_farm_altitude.csv", row.names=FALSE)
+
+
 ## Soil slope ----
 slope<- data_adoption_clean%>%
   filter(x_metric_recla== "hh perception of farm slope" |  x_metric_recla=="soil slope")
 
-length(sort(unique(slope$id))) # Number of articles 25
+length(sort(unique(slope$id))) # Number of articles 24
 sort(unique(slope$x_metric_unit))
 
 # Convert to "1= steep slope, 0= otherwise"
@@ -1094,7 +1124,7 @@ distance_farm$variance_value_num[distance_farm$x_metric_unit %in% "hour"&
 distance_farm$x_metric_unit_recla[distance_farm$x_metric_unit %in% c("hours")] <- "minutes"
 
 # Change factor name
-distance_farm$factor <- "distance from house to farm"
+distance_farm$factor <- "distance farm-house"
 
 # Factor_metric_unit
 distance_farm$factor_metric_unit <- paste(distance_farm$factor, " (", distance_farm$x_metric_unit_recla, ")", sep="")
