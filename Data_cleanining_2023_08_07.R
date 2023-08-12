@@ -26,6 +26,8 @@ data_adoption<- data%>%
 length(sort(unique(data_adoption$id))) # Number of articles 91
 table(data_adoption$y_metric_recla)
 sort(unique(data_adoption$y_metric_recla_2))
+sort(unique(data_adoption$factor))
+
 names(data_adoption)
 ### Pre-processing ----
 data_adoption_clean<- data_adoption%>%

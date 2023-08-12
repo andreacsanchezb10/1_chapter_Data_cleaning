@@ -119,8 +119,44 @@
 "Agricultural extension","agricultural extension frequency",17
 "Agricultural training","access to agricultural training",13
 "Agricultural training","agricultural training frequency",2
+"Distance farm-house","distance farm-house",14
+"Distance to market","distance to input market",4
+"Distance to market","distance to market",19
+"Distance to road","distance to road",11
+"Farm altitude","farm altitude",9
+"Farm labour force","farm labour force",2
+"Farm labour force","farm labour force (hired)",7
+"Farm labour force","farm labour force (non-hired)",15
+"Farm size","farm size",59
+"H asset","h asset",21
+"H size","h size",41
+"HH age","hh age",63
+"HH association member","hh association member",39
+"HH education","hh education",74
+"HH farming experience","hh farming experience",20
+"HH gender","hh gender",54
+"HH is native","hh is native",10
+"HH marital status","hh marital status",7
+"HH off-farm income","hh off-farm income",21
+"HH received a loan","hh received a loan",1
+"HH received a loan","hh received a loan for farm activities",1
+"Irrigation","access to irrigation",5
+"Irrigation","use of irrigation",6
+"Land tenure security","land tenure security",36
+"Livestock owned","livestock owned",3
+"Livestock owned","units of livestock",26
+"Off-farm income","hh engaged in off-farm activities",21
+"Precipitation","precipitation",7
+"Precipitation","precipitation CV",4
 "Region assessed","administrative region assessed",17
 "Region assessed","agroecological zone assessed",8
+"Soil erosion","hh perception of soil erosion",2
+"Soil erosion","soil erosion",7
+"Soil fertility","hh perception of soil fertility",6
+"Soil fertility","soil fertility",10
+"Soil fertility","soil quality",4
+"Soil slope","hh perception of farm slope",3
+"Soil slope","soil slope",21
 "access to agricultural/climate/market information","access to agricultural information",6
 "access to agricultural/climate/market information","access to climate information",4
 "access to association/government/NGO/family support","access to NGO support",1
@@ -130,49 +166,13 @@
 "chemical herbicide/pesticide use","chemical herbicide/pesticide use",3
 "dependent household members","h old members",1
 "dependent household members","h young members",5
-"distance farm-house","distance farm-house",14
 "distance to extension service","distance to extension service",6
-"distance to market","distance to input market",4
-"distance to market","distance to market",19
-"distance to road","distance to road",11
 "family members and friends living in and out the community","family members and friends living in and out the community",6
-"farm altitude","farm altitude",9
-"farm labour force","farm labour force",2
-"farm labour force","farm labour force (hired)",7
-"farm labour force","farm labour force (non-hired)",15
-"farm size","farm size",59
 "fertilizer use","fertilizer use",1
-"h asset","h asset",21
 "h income","h income",9
-"h size","h size",41
-"hh age","hh age",63
-"hh association member","hh association member",39
-"hh education","hh education",74
-"hh farming experience","hh farming experience",20
-"hh gender","hh gender",54
-"hh is native","hh is native",10
-"hh marital status","hh marital status",7
-"hh off-farm income","hh engaged in off-farm activities",21
-"hh off-farm income","hh off-farm income",21
 "hh on-farm income","hh on-farm income",5
-"hh received a loan","hh received a loan",1
-"hh received a loan","hh received a loan for farm activities",1
 "input cost","fertilizer market price",1
-"irrigation","access to irrigation",5
-"irrigation","use of irrigation",6
-"land tenure security","land tenure security",36
-"livestock owned","livestock owned",3
-"livestock owned","units of livestock",26
 "organic fertilizer use","organic fertilizer use",5
-"precipitation","precipitation",7
-"precipitation","precipitation CV",4
-"soil erosion","hh perception of soil erosion",2
-"soil erosion","soil erosion",7
-"soil fertility","hh perception of soil fertility",6
-"soil fertility","soil fertility",10
-"soil fertility","soil quality",4
-"soil slope","hh perception of farm slope",3
-"soil slope","soil slope",21
 NA,"availability of market demand",1
 NA,"crop–livestock integration practices",3
 NA,"hh comunicate with other farmers",3
