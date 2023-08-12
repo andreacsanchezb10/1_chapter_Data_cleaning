@@ -41,7 +41,7 @@ data_adoption_clean<- data_adoption%>%
   #Select only the columns that you are going to use
   dplyr::select(id,model_id,main_crop, intervention_recla,intervention_recla_detail_1,
                 intervention_recla_detail_2,intervention_recla_detail_3,
-                factor, factor_class, factor_sub_class,
+                factor, factor_class, factor_sub_class,factor_context,
                 y_metric_recla, effect_size_type,x_metric_raw,x_metric_recla, x_metric_unit,x_data_type,x_transformation,
                 model_analysis_raw,model_method,coefficient_type, 
                 coefficient, coefficient_num,
