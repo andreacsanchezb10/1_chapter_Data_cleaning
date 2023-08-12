@@ -40,7 +40,7 @@ data_adoption_clean<- data_adoption%>%
          country = as.character(country))%>%
   #Select only the columns that you are going to use
   dplyr::select(id,model_id,main_crop, intervention_recla,intervention_recla_detail_1,
-                intervention_recla_detail_2,intervention_recla_detail_3,
+                intervention_recla_detail_2,intervention_recla_detail_3,intervention_recla_detail_4,
                 factor, factor_class, factor_sub_class,factor_context,
                 y_metric_recla, effect_size_type,x_metric_raw,x_metric_recla, x_metric_unit,x_data_type,x_transformation,
                 model_analysis_raw,model_method,coefficient_type, 
@@ -58,6 +58,14 @@ articles_count <- data_adoption_clean %>%
   summarise(n_articles = n_distinct(id))
 
 write.csv(articles_count, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_factors_count.csv", row.names=FALSE)
+
+system_count<-data_adoption_clean %>%
+  group_by(intervention_recla,intervention_recla_detail_1, intervention_recla_detail_2, intervention_recla_detail_3,
+           intervention_recla_detail_4) %>%
+  summarise(n_articles = n_distinct(id))
+
+write.csv(system_count, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_system_count.csv", row.names=FALSE)
+
 
 ####### FARMER CHARACTERISTICS -------
 ##### Socio-demographic ------
@@ -218,7 +226,6 @@ str(h_size)
 write.csv(h_size, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_h_size.csv", row.names=FALSE)
 
 
-
 ##### Economic and financial capital ------
 #"access to credit"
 #"hh off-farm income" AND "hh engaged in off-farm activities"
@@ -282,7 +289,6 @@ off_farm_income$x_metric_unit_recla[off_farm_income$x_metric_unit %in% c("1= yes
                                                                          "1= hh has a salaried employment, 0= no",
                                                                          "1= if full-time farmer; 0= otherwise",
                                                                          "1= salary employment, 0= no secondary income")] <- "1= yes, 0= no"
-
 #Change to "country currency"
 "naira"                                                                                                           
 "Nigeria naira"                                                                                                   
@@ -384,10 +390,6 @@ table(agricultural_training$factor_metric_unit)
 
 write.csv(agricultural_training, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_agricultural_training.csv", row.names=FALSE)
 
-
-
-
-
 ####### FARM CHARACTERISTICS -----
 ##### Social capital ------
 #"farm labour force" AND "farm labour force (hired)" AND "farm labour force (non-hired)"
@@ -431,8 +433,6 @@ str(farm_labour)
 (unique(farm_labour$x_metric_raw))
 
 write.csv(farm_labour, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_PhD/1_chapter_Data_cleaning/PCC/PCC_farm_labour.csv", row.names=FALSE)
-
-
 
 ##### Physical capital ------
 #"secured land tenure"
@@ -573,7 +573,7 @@ write.csv(livestock_ownership, "C:/Users/andreasanchez/OneDrive - CGIAR/Document
 h_asset<- data_adoption_clean%>%
   filter(x_metric_recla== "h asset")
 
-length(sort(unique(h_asset$id))) # Number of articles 22
+length(sort(unique(h_asset$id))) # Number of articles 21
 sort(unique(h_asset$x_metric_unit))
 
 #Convert to USD
@@ -614,7 +614,7 @@ h_asset$variance_value_num[h_asset$x_metric_unit %in% "USS 1 = GHC 3.924 (Ghania
                                h_asset$variance_metric %in% c("standard error", "robust standard error")] /3.924
 
 # Change the  x_metric_unit_recla
-h_asset$x_metric_unit_recla[h_asset$x_metric_recla %in% c("h asset")] <- h_asset$x_metric_unit
+h_asset$x_metric_unit_recla <- h_asset$x_metric_unit
 
 # Convert to "USD"
 h_asset$x_metric_unit_recla[h_asset$x_metric_unit %in% c("Birr (1 Birr = 0.059 USD at the time of survey)",
@@ -623,46 +623,34 @@ h_asset$x_metric_unit_recla[h_asset$x_metric_unit %in% c("Birr (1 Birr = 0.059 U
                                                          "USS 1 = GHC 3.924 (Ghanian currency)" )] <- "USD"
 
 #Change to "country currency"
-sort(unique(h_asset$factor_metric_unit))
-"h asset (In ETB (ETB, The Ethiopian Birr, the national currency of the Federal Democratic Republic of Ethiopia))"
-"h asset (KES (Kenian money))"                                                                                    
-"h asset (KSh)"                                                                                                   
-"h asset (Nigeria naira)"                                                                                         
-"h asset (Per capita value of household assets (1000 Yuan))"                                                      
-"h asset (thousand taka)"                                                                                         
-"h asset (TSh)"                                                                                                   
-"h asset (USD)"                                                                                                   
-"h asset (Ushs)"                                                                                                  
-"h asset (VND)"
-h_asset$x_metric_unit_recla[h_asset$factor_metric_unit %in% c("h asset (In ETB (ETB, The Ethiopian Birr, the national currency of the Federal Democratic Republic of Ethiopia))",
-                                                                         "h asset (KES (Kenian money))",                                                                                    
-                                                                         "h asset (KSh)"   ,                                                                                                
-                                                                         "h asset (Nigeria naira)"   ,                                                                                      
-                                                                         "h asset (Per capita value of household assets (1000 Yuan))" ,                                                     
-                                                                         "h asset (thousand taka)"  ,                                                                                       
-                                                                         "h asset (TSh)"   ,                                                                                                
-                                                                         "h asset (USD)" ,                                                                                                  
-                                                                         "h asset (Ushs)" ,                                                                                                 
-                                                                         "h asset (VND)")] <- "country currency"
+h_asset$x_metric_unit_recla[h_asset$x_metric_unit_recla %in% c("In ETB (ETB, The Ethiopian Birr, the national currency of the Federal Democratic Republic of Ethiopia)",
+                                                                         "KES (Kenian money)",                                                                                    
+                                                                         "KSh"   ,                                                                                                
+                                                                         "Nigeria naira"   ,                                                                                      
+                                                                         "Per capita value of household assets (1000 Yuan)" ,                                                     
+                                                                         "thousand taka"  ,                                                                                       
+                                                                         "TSh"   ,                                                                                                
+                                                                         "USD" ,                                                                                                  
+                                                                         "Ushs" ,                                                                                                 
+                                                                         "VND")] <- "country currency"
 
 #Change to "hh asset index"
-"h asset (hh Asset index)" 
-"h asset (Household asset index)" 
-"h asset (index)"
-h_asset$x_metric_unit_recla[h_asset$factor_metric_unit %in% c("h asset (hh Asset index)" ,
-                                                              "h asset (Household asset index)" ,
-                                                              "h asset (index)")] <- "index"
+sort(unique(h_asset$x_metric_unit_recla))
+
+h_asset$x_metric_unit_recla[h_asset$x_metric_unit_recla %in% c("hh Asset index" ,
+                                                               "Household asset index" ,
+                                                               "index" )] <- "index"
 
 #Change to "number of tools"
 "h asset (Number of different farming tools farmer has)"
 "h asset (number of tools)"
-h_asset$x_metric_unit_recla[h_asset$factor_metric_unit %in% c("h asset (Number of different farming tools farmer has)",
-                                                              "h asset (number of tools)")] <- "number of tools"
+h_asset$x_metric_unit_recla[h_asset$x_metric_unit_recla %in% c("Number of different farming tools farmer has",
+                                                              "number of tools")] <- "number of tools"
 
 # Factor_metric_unit
 h_asset$factor_metric_unit<- paste(h_asset$factor, " (", h_asset$x_metric_unit_recla, ")", sep="")
 
-sort(unique(h_asset$factor_metric_unit))
+sort(unique(h_asset$x_metric_unit_recla))
 str(h_asset)
 (unique(h_asset$x_metric_raw))
 table(h_asset$factor_metric_unit)

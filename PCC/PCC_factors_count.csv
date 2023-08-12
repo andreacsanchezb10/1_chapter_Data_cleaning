@@ -3,7 +3,7 @@
 "0","access to agricultural inputs",1
 "0","access to electricity",1
 "0","access to input (fertilizer, seed, pesticides) subsidy",2
-"0","access to machinery",1
+"0","access to machinery",2
 "0","access to road networks",2
 "0","access to transportation",1
 "0","access to water",1
@@ -112,18 +112,20 @@
 "0","variation in the main crop price",1
 "0","who made farm decisions",1
 "0","year assessed",3
+"Access to agricultural/climate/market information","access to output crop price",2
+"Access to credit","access to credit",28
+"Access to credit is a constraint","access to credit is a constraint",4
+"Agricultural extension","access to agricultural extension",29
+"Agricultural extension","agricultural extension frequency",17
+"Agricultural training","access to agricultural training",13
+"Agricultural training","agricultural training frequency",2
+"Region assessed","administrative region assessed",17
+"Region assessed","agroecological zone assessed",8
 "access to agricultural/climate/market information","access to agricultural information",6
 "access to agricultural/climate/market information","access to climate information",4
-"access to agricultural/climate/market information","access to output crop price",2
 "access to association/government/NGO/family support","access to NGO support",1
 "access to association/government/NGO/family support","access to government support",2
-"access to credit","access to credit",28
 "access to credit","hh perception of access to credit",1
-"access to credit is a constraint","access to credit is a constraint",4
-"agricultural extension","access to agricultural extension",29
-"agricultural extension","agricultural extension frequency",17
-"agricultural training","access to agricultural training",13
-"agricultural training","agricultural training frequency",2
 "chemical fertilizer use","chemical fertilizer use",4
 "chemical herbicide/pesticide use","chemical herbicide/pesticide use",3
 "dependent household members","h old members",1
@@ -140,7 +142,7 @@
 "farm labour force","farm labour force (non-hired)",15
 "farm size","farm size",59
 "fertilizer use","fertilizer use",1
-"h asset","h asset",22
+"h asset","h asset",21
 "h income","h income",9
 "h size","h size",41
 "hh age","hh age",63
@@ -164,8 +166,6 @@
 "organic fertilizer use","organic fertilizer use",5
 "precipitation","precipitation",7
 "precipitation","precipitation CV",4
-"region assessed","administrative region assessed",17
-"region assessed","agroecological zone assessed",8
 "soil erosion","hh perception of soil erosion",2
 "soil erosion","soil erosion",7
 "soil fertility","hh perception of soil fertility",6
