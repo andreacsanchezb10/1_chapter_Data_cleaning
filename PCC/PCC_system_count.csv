@@ -16,32 +16,32 @@
 "agroforestry","woodlot",NA,NA,NA,1
 "agroforestry",NA,NA,"exotic trees",NA,2
 "agroforestry",NA,NA,"native trees",NA,1
-"agroforestry",NA,NA,NA,NA,13
+"agroforestry",NA,NA,NA,NA,18
 "agroforestry and fallow","agroforestry and fallow period","natural fallow",NA,NA,1
 "agroforestry and fallow","alley cropping with fallow periods",NA,NA,"n fixing",1
 "agroforestry and fallow","hedgerow",NA,"grass or weedy buffer strips",NA,1
 "crop rotation","cover crops",NA,NA,"maintain soil moisture",2
 "crop rotation","cover crops",NA,NA,"n fixing",1
-"crop rotation","cover crops",NA,NA,NA,2
+"crop rotation","cover crops",NA,NA,NA,3
 "crop rotation",NA,NA,"annual crops","n fixing",4
 "crop rotation",NA,NA,"annual crops",NA,9
-"crop rotation",NA,NA,NA,"n fixing",5
-"crop rotation",NA,NA,NA,NA,5
+"crop rotation",NA,NA,NA,"n fixing",6
+"crop rotation",NA,NA,NA,NA,8
 "crop rotation and intercropping",NA,NA,NA,"n fixing",4
 "crop rotation and intercropping",NA,NA,NA,NA,2
 "grazing cut and carry",NA,NA,NA,NA,2
-"integrated aquaculture-agriculture",NA,NA,NA,NA,1
+"integrated aquaculture-agriculture",NA,NA,NA,NA,2
 "integrated crop-livestock",NA,NA,NA,NA,3
 "intercropping","pull-push",NA,"crop and fodder crop",NA,2
 "intercropping",NA,NA,"annual crops","n fixing",3
 "intercropping",NA,NA,"annual crops",NA,1
 "intercropping",NA,NA,"perennial crops",NA,1
 "intercropping",NA,NA,NA,"n fixing",6
-"intercropping",NA,NA,NA,NA,5
+"intercropping",NA,NA,NA,NA,7
 "land with temporary fallow","general fallow (natural or improved)",NA,NA,NA,1
 "land with temporary fallow","improved fallow",NA,"tree species",NA,1
 "land with temporary fallow","natural fallow",NA,NA,NA,3
-"land with temporary fallow",NA,NA,NA,NA,1
+"land with temporary fallow",NA,NA,NA,NA,2
 "soil bund with contour cultivation",NA,NA,"crops",NA,1
 "soil bund with contour cultivation",NA,NA,"grass","control soil erosion",1
 "soil bund with contour cultivation",NA,NA,"perennial grass",NA,1

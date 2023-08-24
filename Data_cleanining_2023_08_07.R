@@ -5,7 +5,7 @@ library(dplyr)
 library(funModeling)
 
 # Set the file path and name of the .xlsx file -------
-data_path <- "C:/Users/AndreaSanchez/OneDrive - CGIAR/1_chapter_PhD/data_extraction/Meta_data_2023.06.05.xlsx"
+data_path <- "C:/Users/AndreaSanchez/OneDrive - CGIAR/1_chapter_PhD/data_extraction/Meta_data_2023.08.23.xlsx"
 
 # Use the read_excel() function to read the data into a data frame
 data <- read_excel(data_path, sheet = "meta_PCC_votecounting")
@@ -23,7 +23,7 @@ names(data)
 data_adoption<- data%>%
   dplyr::filter(y_metric_recla_2=="adoption")
 
-length(sort(unique(data_adoption$id))) # Number of articles 91
+length(sort(unique(data_adoption$id))) # Number of articles 98
 table(data_adoption$y_metric_recla)
 sort(unique(data_adoption$y_metric_recla_2))
 sort(unique(data_adoption$factor))
@@ -54,6 +54,7 @@ data_adoption_clean<- data_adoption%>%
 str(data_adoption_clean)
 ### Factors cleaning ----
 sort(unique(data_adoption_clean$x_metric_recla))
+sort(unique(data_adoption_clean$limitation))
 
 articles_count <- data_adoption_clean %>%
   group_by(factor,x_metric_recla) %>%
@@ -81,7 +82,7 @@ write.csv(system_count, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Cha
 hh_age<- data_adoption_clean%>%
   filter(x_metric_recla== "hh age")
 
-length(sort(unique(hh_age$id))) # Number of articles 63
+length(sort(unique(hh_age$id))) # Number of articles 69
 sort(unique(hh_age$x_metric_unit))
 #[1] "(years)^2"                                                                 "1= <31 yrs, 2= 31-40 yrs, 3= 41-50 yrs, 4= 51-60 yrs, 5= more than 60 yrs"
 #[3] "1= <40 yrs, 2= 40–60 yrs, 3= 60–80 yrs, 4= 80 yrs"                         "1= 20–30 yrs, 2= 30–40 yrs, 3= 40–50 yrs, 4= above 50 yrs"                
@@ -91,9 +92,10 @@ sort(unique(hh_age$x_metric_unit))
 table(hh_age$x_metric_unit)
 sort(unique(hh_age$x_data_type))
 sort(unique(hh_age$factor))
+table(hh_age$x_metric_unit,hh_age$x_data_type)
 
 #Change to "years"
-"hh age (years * (10^-2))"
+"years * (10^-2)"
 hh_age$coefficient_num[hh_age$x_metric_unit %in% c("years * (10^-2)")] <- 
   hh_age$coefficient_num[hh_age$x_metric_unit %in% c("years * (10^-2)")] * 10^-2
 
@@ -104,8 +106,8 @@ hh_age$variance_value_num[hh_age$x_metric_unit %in% "years * (10^-2)"&
 
 # Change the  x_metric_unit_recla
 hh_age$x_metric_unit_recla <- hh_age$x_metric_unit
-
 hh_age$x_metric_unit_recla[hh_age$x_metric_unit %in% c("years * (10^-2)")] <- "years"
+
   
 # Factor_metric_unit
 hh_age$factor_metric_unit <- paste(hh_age$factor, " (", hh_age$x_metric_unit_recla, ")", sep="")
@@ -120,7 +122,7 @@ write.csv(hh_age, "C:/Users/andreasanchez/OneDrive - CGIAR/Documents/1_Chapter_P
 hh_gender<- data_adoption_clean%>%
   filter(x_metric_recla== "hh gender")
 
-length(sort(unique(hh_gender$id))) # Number of articles 54
+length(sort(unique(hh_gender$id))) # Number of articles 58
 sort(unique(hh_gender$x_metric_unit))
 sort(unique(hh_gender$x_data_type))
 sort(unique(hh_gender$factor))

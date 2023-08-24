@@ -1,4 +1,5 @@
 "factor","x_metric_recla","n_articles"
+"0","Input cost",1
 "0","Lack access to equipment/technology",2
 "0","access to agricultural inputs",1
 "0","access to electricity",1
@@ -6,7 +7,7 @@
 "0","access to machinery",2
 "0","access to road networks",2
 "0","access to transportation",1
-"0","access to water",1
+"0","access to water",2
 "0","agricultural input price (seed,)",1
 "0","agriculture as main source of income",3
 "0","area of main crop grown",7
@@ -18,7 +19,7 @@
 "0","cropland area",7
 "0","distance to forest",3
 "0","distance to public transport",1
-"0","distance to town",6
+"0","distance to town",7
 "0","distance to water course",3
 "0","drought ocurrance",3
 "0","energy sources (other than fuel-wood)",1
@@ -28,67 +29,72 @@
 "0","farmland is a rented land",7
 "0","financial incentive from government",1
 "0","firewood needed and consumed",3
-"0","flood ocurrance",1
+"0","flood depth",1
+"0","flood duration",1
+"0","flood ocurrance",2
 "0","fodder needed and consumed",1
 "0","fodder scarcity",2
 "0","fuel scarcity",1
 "0","grazing land",1
-"0","h adult members",9
+"0","h adult members",11
 "0","h dependency ratio",5
 "0","h ill members",2
 "0","h participation in PES (payments for ecosystem services) program",1
 "0","hh comunicate with other farmers",1
-"0","hh ethnicity",9
-"0","hh expediture",2
+"0","hh ethnicity",10
+"0","hh expediture",3
 "0","hh full rights over trees",3
 "0","hh has a bank account",1
+"0","hh has a mobile phone",3
 "0","hh has conexion with people in leadership position",5
 "0","hh has mean of transport",2
 "0","hh has radio or tv",3
 "0","hh has sufficient land",2
 "0","hh held debt",2
 "0","hh indebtedness",1
-"0","hh member migration",4
-"0","hh mobile phone ownership",2
+"0","hh member migration",5
 "0","hh participation in agricultural support program",2
 "0","hh perception of access to transportation",1
+"0","hh perception of adecuated rainfall",4
+"0","hh perception of climate change",1
 "0","hh perception of climate change impacting yield",1
+"0","hh perception of drought increased",1
 "0","hh perception of drought ocurrance",4
 "0","hh perception of environmental problems",1
 "0","hh perception of extension services",5
 "0","hh perception of government support",6
-"0","hh perception of hail ocurrance",2
+"0","hh perception of hail ocurrance",3
 "0","hh perception of insfrastructure access",1
 "0","hh perception of market inestability",1
 "0","hh perception of pest severity",1
 "0","hh perception of pests impacting yield",1
-"0","hh perception of precipitation",7
 "0","hh perception of problems with irrigation",1
+"0","hh perception of rainfall decreased",4
 "0","hh perception of soil degradation",2
 "0","hh perception of soil depth",2
-"0","hh perception of temperature inestability",1
+"0","hh perception of temperature increase",3
 "0","hh perception of the diversified farming system",6
 "0","hh receive incentive from association",1
-"0","hh risk",2
-"0","hh savings",2
-"0","hh spouse education",3
-"0","hh wealth",5
+"0","hh risk",4
+"0","hh savings",3
+"0","hh spouse education",4
+"0","hh wealth",6
 "0","importance of livestock",4
 "0","input (fertilizer, seed, pesticides) subsidy received",1
-"0","interactions between factors",5
+"0","interactions between factors",6
 "0","knowledge of the diversified farming system",3
 "0","land fragmentation",2
 "0","land problems",2
 "0","land scarcity",2
 "0","level of crop diversification",5
 "0","marginal land",2
-"0","number of agricultural plots",5
-"0","number of crops grown",2
-"0","number of farms",1
+"0","number of agricultural plots",7
+"0","number of crops grown",3
+"0","number of farms",2
 "0","off-farm bussiness as main source of income",1
 "0","pest severity",2
 "0","plot is obtained from divided inheritance",1
-"0","plot size",10
+"0","plot size",12
 "0","population density",4
 "0","price of crops planted",1
 "0","productivist ID",2
@@ -96,7 +102,7 @@
 "0","reliance on external finance sources",1
 "0","seeding method",1
 "0","soil  organic matter",3
-"0","soil depth",7
+"0","soil depth",8
 "0","soil texture",2
 "0","soil type",3
 "0","soil water availability",2
@@ -113,50 +119,50 @@
 "0","who made farm decisions",1
 "0","year assessed",3
 "Access to agricultural/climate/market information","access to output crop price",2
-"Access to credit","access to credit",28
-"Access to credit is a constraint","access to credit is a constraint",4
-"Agricultural extension","access to agricultural extension",29
-"Agricultural extension","agricultural extension frequency",17
-"Agricultural training","access to agricultural training",13
+"Access to credit","access to credit",31
+"Access to credit is a constraint","access to credit is a constraint",5
+"Agricultural extension","access to agricultural extension",31
+"Agricultural extension","agricultural extension frequency",18
+"Agricultural training","access to agricultural training",14
 "Agricultural training","agricultural training frequency",2
-"Distance farm-house","distance farm-house",14
+"Distance farm-house","distance farm-house",17
 "Distance to market","distance to input market",4
-"Distance to market","distance to market",19
+"Distance to market","distance to market",21
 "Distance to road","distance to road",11
-"Farm altitude","farm altitude",9
+"Farm altitude","farm altitude",10
 "Farm labour force","farm labour force",2
 "Farm labour force","farm labour force (hired)",7
 "Farm labour force","farm labour force (non-hired)",15
-"Farm size","farm size",59
-"H asset","h asset",21
-"H size","h size",41
-"HH age","hh age",63
-"HH association member","hh association member",39
-"HH education","hh education",74
-"HH farming experience","hh farming experience",20
-"HH gender","hh gender",54
+"Farm size","farm size",65
+"H asset","h asset",23
+"H size","h size",44
+"HH age","hh age",69
+"HH association member","hh association member",41
+"HH education","hh education",79
+"HH farming experience","hh farming experience",22
+"HH gender","hh gender",58
 "HH is native","hh is native",10
-"HH marital status","hh marital status",7
-"HH off-farm income","hh off-farm income",21
+"HH marital status","hh marital status",8
+"HH off-farm income","hh off-farm income",22
 "HH received a loan","hh received a loan",1
 "HH received a loan","hh received a loan for farm activities",1
 "Irrigation","access to irrigation",5
 "Irrigation","use of irrigation",6
-"Land tenure security","land tenure security",36
-"Livestock owned","livestock owned",3
-"Livestock owned","units of livestock",26
-"Off-farm income","hh engaged in off-farm activities",21
+"Land tenure security","land tenure security",41
+"Livestock owned","livestock owned",4
+"Livestock owned","units of livestock",29
+"Off-farm income","hh engaged in off-farm activities",23
 "Precipitation","precipitation",7
 "Precipitation","precipitation CV",4
-"Region assessed","administrative region assessed",17
-"Region assessed","agroecological zone assessed",8
-"Soil erosion","hh perception of soil erosion",2
+"Region assessed","administrative region assessed",19
+"Region assessed","agroecological zone assessed",9
+"Soil erosion","hh perception of soil erosion",3
 "Soil erosion","soil erosion",7
-"Soil fertility","hh perception of soil fertility",6
-"Soil fertility","soil fertility",10
-"Soil fertility","soil quality",4
-"Soil slope","hh perception of farm slope",3
-"Soil slope","soil slope",21
+"Soil fertility","hh perception of soil fertility",8
+"Soil fertility","soil fertility",12
+"Soil fertility","soil quality",5
+"Soil slope","hh perception of farm slope",4
+"Soil slope","soil slope",23
 "access to agricultural/climate/market information","access to agricultural information",6
 "access to agricultural/climate/market information","access to climate information",4
 "access to association/government/NGO/family support","access to NGO support",1
@@ -165,17 +171,17 @@
 "chemical fertilizer use","chemical fertilizer use",4
 "chemical herbicide/pesticide use","chemical herbicide/pesticide use",3
 "dependent household members","h old members",1
-"dependent household members","h young members",5
-"distance to extension service","distance to extension service",6
-"family members and friends living in and out the community","family members and friends living in and out the community",6
+"dependent household members","h young members",6
+"distance to extension service","distance to extension service",7
+"family members and friends living in and out the community","family members and friends living in and out the community",7
 "fertilizer use","fertilizer use",1
-"h income","h income",9
+"h income","h income",10
 "hh on-farm income","hh on-farm income",5
 "input cost","fertilizer market price",1
-"organic fertilizer use","organic fertilizer use",5
+"organic fertilizer use","organic fertilizer use",6
 NA,"availability of market demand",1
 NA,"crop–livestock integration practices",3
 NA,"hh comunicate with other farmers",3
 NA,"hh time in village",1
 NA,"secured land tenure",1
-NA,NA,48
+NA,NA,55
